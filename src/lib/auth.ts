@@ -1,25 +1,23 @@
-import { ClientId, ClientSecret, TenantId } from "@/utils/constants";
-
 // lib/auth.js
-// const clientId = "722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984";
-// const tenantId = "e3e57fda-3690-4162-8988-1aa74cebfe84";
-// const clientSecret = "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2";
+const clientId = "722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984";
+const tenantId = "e3e57fda-3690-4162-8988-1aa74cebfe84";
+const clientSecret = "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2";
 const redirectUri = "http://localhost:3000/callback";
 
 async function getToken(code: string) {
   const tokenResponse = await fetch(
-    `https://login.microsoftonline.com/${TenantId}/oauth2/v2.0/token`,
+    `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        client_id: ClientId,
+        client_id: clientId,
         code,
         redirect_uri: redirectUri,
         scope: "https://graph.microsoft.com/.default",
-        client_secret: ClientSecret,
+        client_secret: clientSecret,
         grant_type: "authorization_code",
       }),
     }
@@ -35,17 +33,17 @@ async function getToken(code: string) {
 
 async function refreshAccessToken(refreshToken: string) {
   const refreshTokenResponse = await fetch(
-    `https://login.microsoftonline.com/${TenantId}/oauth2/v2.0/token`,
+    `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        client_id: ClientId,
+        client_id: clientId,
         refresh_token: refreshToken,
         scope: "https://graph.microsoft.com/.default",
-        client_secret: ClientSecret,
+        client_secret: clientSecret,
         grant_type: "refresh_token",
       }),
     }

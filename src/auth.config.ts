@@ -1,15 +1,14 @@
 import type { Session, User, Account } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import { JWT } from "next-auth/jwt";
-import { ClientId, ClientSecret, TenantId } from "./utils/constants";
 
 const config = {
   providers: [
     AzureADProvider({
       name: "azure",
-      clientId: ClientId,
-      clientSecret: ClientSecret,
-      tenantId: TenantId,
+      clientId: "722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984",
+      clientSecret: "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2",
+      tenantId: "e3e57fda-3690-4162-8988-1aa74cebfe84",
       authorization: {
         params: {
           scope: "openid email profile User.Read offline_access", // Adicione mais escopos aqui se necessário
@@ -66,7 +65,7 @@ export default config;
 // Função para renovar o token de acesso usando o refresh token
 async function refreshAccessToken(token: JWT) {
   try {
-    const url = `https://login.microsoftonline.com/${TenantId}/oauth2/v2.0/token`;
+    const url = `https://login.microsoftonline.com/e3e57fda-3690-4162-8988-1aa74cebfe84/oauth2/v2.0/token`;
 
     const response = await fetch(url, {
       method: "POST",
@@ -74,8 +73,8 @@ async function refreshAccessToken(token: JWT) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        client_id: ClientId,
-        client_secret: ClientSecret,
+        client_id: "722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984",
+        client_secret: "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2",
         grant_type: "refresh_token",
         refresh_token: token.refreshToken as string,
         scope: "openid email profile User.Read offline_access",
