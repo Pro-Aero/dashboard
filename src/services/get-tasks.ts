@@ -63,20 +63,20 @@ export async function GetTasks(token: string): Promise<TaskWithUserIds[]> {
 
     const groupsData = await response.json();
     const groups = groupsData.value.filter(
-      (group) => group["@odata.type"] === "#microsoft.graph.group"
+      (group: any) => group["@odata.type"] === "#microsoft.graph.group"
     );
 
     const allTasks: TaskWithUserIds[] = [];
 
     // Obter planos e tarefas em paralelo
-    const groupTasksPromises = groups.map(async (group) => {
+    const groupTasksPromises = groups.map(async (group: any) => {
       try {
         const plans = await getPlansForGroup(group.id, token);
-        const planTasksPromises = plans.map(async (plan) => {
+        const planTasksPromises = plans.map(async (plan: any) => {
           try {
             const tasks = await getTasksForPlan(plan.id, token);
             // Mapear tarefas para incluir IDs de criador e atribuídos
-            return tasks.map((task) => {
+            return tasks.map((task: any) => {
               const creatorId = task.createdBy?.user?.id || null;
               const assignedUserIds = Object.keys(task.assignments || {});
               return {

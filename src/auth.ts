@@ -14,7 +14,7 @@ export const {
   signOut: ReturnType<typeof NextAuth>["signOut"];
 } = NextAuth({
   // Session config
-  session: { strategy: "jwt", maxAge: 3 * 24 * 60 * 60 }, // 30 dias
+  session: { strategy: "jwt" },
   pages: {
     signIn: "/auth/sign-in",
     error: "/auth/error",

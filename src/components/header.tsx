@@ -3,10 +3,8 @@ import Image from "next/image";
 
 import ProaeroIcon from "@/assets/logo.png";
 
-import { OrganizationSwitcher } from "./organization-switcher";
 // import { PendingInvites } from "./pending-invites";
 import { ProfileButton } from "./profile-button";
-import { ProjectSwitcher } from "./project-switcher";
 import { ThemeSwitcher } from "./theme/theme-switcher";
 import { Separator } from "./ui/separator";
 
