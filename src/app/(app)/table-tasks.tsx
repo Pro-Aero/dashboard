@@ -1,4 +1,4 @@
-import { TaskPlannerProps, TaskWithUserIds } from "@/@types";
+import { TaskWithUserIds } from "@/@types";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
