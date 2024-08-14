@@ -22,6 +22,8 @@ interface PlannerMap {
   [plannerId: string]: string;
 }
 
+export const runtime = "edge";
+
 export default async function Home() {
   const session = await auth();
 
