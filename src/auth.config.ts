@@ -103,7 +103,7 @@ const config: NextAuthConfig = {
     },
   },
   secret: "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2",
-  trustHost: !!process.env.TRUST_HOST,
+  trustHost: true,
 };
 
 export default config;
