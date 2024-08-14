@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 
 import Logo from "@/assets/logo.png";
-import { ClientId, ClientSecret, TenantId } from "@/utils/constants";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -18,8 +17,6 @@ export default async function SignInPage() {
   if (session?.user) {
     redirect("/");
   }
-
-  console.log("Tenant:" + TenantId, "Id:" + ClientId, ClientSecret);
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center">

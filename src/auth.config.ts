@@ -2,11 +2,11 @@ import type { NextAuthConfig } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import { JWT } from "next-auth/jwt";
 import { addSeconds, subMinutes } from "date-fns";
-import { env } from "./envConfig";
+import { ClientId, ClientSecret, TenantId } from "./utils/constants";
 
 async function refreshAccessToken(token: JWT) {
   try {
-    const url = `https://login.microsoftonline.com/${env.AZURE_AD_TENANT_ID}/oauth2/v2.0/token`;
+    const url = `https://login.microsoftonline.com/${TenantId}/oauth2/v2.0/token`;
 
     const response = await fetch(url, {
       method: "POST",
@@ -14,8 +14,8 @@ async function refreshAccessToken(token: JWT) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        client_id: env.AZURE_AD_CLIENT_ID,
-        client_secret: env.AZURE_AD_CLIENT_SECRET,
+        client_id: ClientId,
+        client_secret: ClientSecret,
         grant_type: "refresh_token",
         refresh_token: token.refreshToken as string,
         scope: "openid email profile User.Read offline_access",
@@ -51,9 +51,9 @@ async function refreshAccessToken(token: JWT) {
 const config: NextAuthConfig = {
   providers: [
     AzureADProvider({
-      clientId: env.AZURE_AD_CLIENT_ID,
-      clientSecret: env.AZURE_AD_CLIENT_SECRET,
-      tenantId: env.AZURE_AD_TENANT_ID,
+      clientId: ClientId,
+      clientSecret: ClientSecret,
+      tenantId: TenantId,
       authorization: {
         params: {
           scope: "openid email profile User.Read offline_access",
@@ -102,8 +102,8 @@ const config: NextAuthConfig = {
       return session;
     },
   },
-  secret: env.NEXTAUTH_SECRET,
-  trustHost: !!env.TRUST_HOST,
+  secret: "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2",
+  trustHost: !!process.env.TRUST_HOST,
 };
 
 export default config;
