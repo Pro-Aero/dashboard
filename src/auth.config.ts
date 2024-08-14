@@ -312,6 +312,7 @@ const config: NextAuthConfig = {
     },
   },
   secret: "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2",
+  trustHost: true,
 };
 
 export default config;
