@@ -11,7 +11,7 @@ export function SignInButton() {
 
   const handleLoginClick = async () => {
     try {
-      signIn("azure", { callbackUrl: "/" }, { prompt: "login" });
+      signIn("azure-ad", { callbackUrl: "/" }, { prompt: "login" });
     } catch (error) {
       console.error(error);
     }

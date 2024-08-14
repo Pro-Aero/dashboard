@@ -1,74 +1,110 @@
-import type { Session, User, Account, NextAuthConfig } from "next-auth";
+// import type { Session, NextAuthConfig } from "next-auth";
+// import AzureADProvider from "next-auth/providers/azure-ad";
+// import { JWT } from "next-auth/jwt";
+// import { jwtDecode, JwtPayload } from "jwt-decode";
+// import { addMinutes, addSeconds, subMinutes, subSeconds } from "date-fns";
+// import { ClientId, ClientSecret, TenantId } from "./utils/constants";
+
+// async function refreshAccessToken(token: JWT) {
+//   try {
+//     const url = `https://login.microsoftonline.com/${TenantId}/oauth2/v2.0/token`;
+
+//     const response = await fetch(url, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/x-www-form-urlencoded",
+//       },
+//       body: new URLSearchParams({
+//         client_id: ClientId,
+//         client_secret: ClientSecret,
+//         grant_type: "refresh_token",
+//         refresh_token: token.refreshToken as string,
+//         scope: "openid email profile User.Read offline_access",
+//       }),
+//     });
+
+//     const refreshedTokens = await response.json();
+
+//     console.log(refreshedTokens);
+
+//     console.log("Refreshed tokens:", refreshedTokens); // Log refreshed tokens for debugging
+
+//     if (!response.ok) {
+//       throw refreshedTokens;
+//     }
+
+//     return {
+//       ...token,
+//       access_token: refreshedTokens.access_token,
+//       expires_in: addSeconds(new Date(), refreshedTokens.expires_in).getTime(),
+//       refresh_token: refreshedTokens.refresh_token ?? token.refresh_token,
+//       refresh_expires_in: subMinutes(
+//         addSeconds(new Date(), refreshedTokens.refresh_expires_in),
+//         2
+//       ).getTime(),
+//     };
+//   } catch (error) {
+//     return {
+//       ...token,
+//       error: "RefreshAccessTokenError",
+//     };
+//   }
+// }
+
+// const config: NextAuthConfig = {
+//   providers: [
+//     AzureADProvider({
+//       name: "azure",
+//       clientId: ClientId,
+//       clientSecret: ClientSecret,
+//       tenantId: TenantId,
+//       authorization: {
+//         params: {
+//           scope: "openid email profile User.Read offline_access", // Remova o 'offline_access' para não solicitar refresh token
+//         },
+//       },
+//     }),
+//   ],
+
+//   callbacks: {
+//     jwt: async ({ token, account, user }: any) => {
+//       console.log(account, user);
+//       if (account) {
+//         return {
+//           id: user.id as string,
+//           name: user.name as string,
+//           email: user.email as string,
+//           accessToken: account.access_token,
+//           expires_in: account.expires_in,
+//           refreshToken: account.refresh_token,
+//         };
+//       }
+
+//       if (Date.now() < token.expires_in) {
+//         return token;
+//       } else if (Date.now() < token.refresh_expires_in) {
+//         return refreshAccessToken(token);
+//       }
+//     },
+//     async session({ session, token }) {
+//       session.user.accessToken = token.accessToken as string;
+//       return session;
+//     },
+//   },
+//   secret: "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2",
+// };
+
+// export default config;
+
+import type { Session, NextAuthConfig } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import { JWT } from "next-auth/jwt";
+import { addSeconds, subMinutes } from "date-fns";
+import { ClientId, ClientSecret, TenantId } from "./utils/constants";
 
-const config: NextAuthConfig = {
-  providers: [
-    AzureADProvider({
-      name: "azure",
-      clientId: "722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984",
-      clientSecret: process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_SECRET,
-      tenantId: "e3e57fda-3690-4162-8988-1aa74cebfe84",
-      authorization: {
-        params: {
-          scope: "openid email profile User.Read offline_access", // Adicione mais escopos aqui se necessário
-        },
-      },
-    }),
-  ],
-
-  callbacks: {
-    // signIn config
-    async signIn({ account }) {
-      if (account?.provider === "azure") {
-        return true;
-      }
-
-      return false;
-    },
-    jwt({ token, user, account, trigger }: any) {
-      // Initial sign-in
-      if (account && user) {
-        const expiresIn = account?.expires_in ?? 0; // Usa 0 como valor padrão se expires_in for undefined
-
-        const accessTokenExpires = Date.now() + expiresIn * 1000;
-        return {
-          ...token,
-          accessToken: account.access_token,
-          refreshToken: account.refresh_token,
-          accessTokenExpires,
-        };
-      }
-
-      // Return previous token if the access token has not expired yet
-      if (Date.now() < (token.accessTokenExpires as number)) {
-        return token;
-      }
-
-      // Access token has expired, try to update it
-      return refreshAccessToken(token);
-    },
-
-    async session({ session, token }: { session: Session; token: JWT }) {
-      // Add token and user details to the session
-      session.user.id = token.sub as string;
-      session.user.name = token.name as string;
-      session.user.email = token.email as string;
-      session.user.accessToken = token.accessToken as string;
-      session.user.refreshToken = token.refreshToken as string;
-      return session;
-    },
-  },
-
-  secret: process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_SECRET,
-};
-
-export default config;
-
-// Função para renovar o token de acesso usando o refresh token
 async function refreshAccessToken(token: JWT) {
   try {
-    const url = `https://login.microsoftonline.com/e3e57fda-3690-4162-8988-1aa74cebfe84/oauth2/v2.0/token`;
+    const url = `https://login.microsoftonline.com/${TenantId}/oauth2/v2.0/token`;
 
     const response = await fetch(url, {
       method: "POST",
@@ -76,8 +112,8 @@ async function refreshAccessToken(token: JWT) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        client_id: "722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984",
-        client_secret: process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_SECRET as string,
+        client_id: ClientId,
+        client_secret: ClientSecret,
         grant_type: "refresh_token",
         refresh_token: token.refreshToken as string,
         scope: "openid email profile User.Read offline_access",
@@ -86,8 +122,6 @@ async function refreshAccessToken(token: JWT) {
 
     const refreshedTokens = await response.json();
 
-    console.log("Refreshed tokens:", refreshedTokens); // Log refreshed tokens for debugging
-
     if (!response.ok) {
       throw refreshedTokens;
     }
@@ -95,14 +129,74 @@ async function refreshAccessToken(token: JWT) {
     return {
       ...token,
       accessToken: refreshedTokens.access_token,
-      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000, // Update expiration time
-      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+      expires_in: addSeconds(new Date(), refreshedTokens.expires_in).getTime(),
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
+      refresh_expires_in: subMinutes(
+        addSeconds(new Date(), refreshedTokens.refresh_expires_in),
+        2
+      ).getTime(),
     };
   } catch (error) {
     console.error("Error refreshing access token:", error);
+
     return {
       ...token,
       error: "RefreshAccessTokenError",
     };
   }
 }
+
+const config: NextAuthConfig = {
+  providers: [
+    AzureADProvider({
+      clientId: ClientId,
+      clientSecret: ClientSecret,
+      tenantId: TenantId,
+      authorization: {
+        params: {
+          scope: "openid email profile User.Read offline_access",
+        },
+      },
+    }),
+  ],
+
+  callbacks: {
+    jwt: async ({ token, account, user }: any) => {
+      if (account) {
+        return {
+          ...token,
+          accessToken: account.access_token,
+          expires_in: addSeconds(new Date(), account.expires_in).getTime(),
+          refreshToken: account.refresh_token,
+          refresh_expires_in: subMinutes(
+            addSeconds(new Date(), account.refresh_expires_in),
+            2
+          ).getTime(),
+        };
+      }
+
+      // Verifica se o access token ainda é válido
+      if (Date.now() < token.expires_in) {
+        return token;
+      }
+
+      // Verifica se o refresh token ainda é válido
+      if (Date.now() < token.refresh_expires_in) {
+        return await refreshAccessToken(token);
+      }
+
+      return {
+        ...token,
+        error: "RefreshTokenExpiredError",
+      };
+    },
+    async session({ session, token }) {
+      session.user.accessToken = token.accessToken as string;
+      session.error = token.error;
+      return session;
+    },
+  },
+  secret: "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2",
+};
+
+export default config;

@@ -1,4 +1,4 @@
-import { PlannerProps, TaskPlannerProps, TaskWithUserIds } from "@/@types";
+import { TaskWithUserIds } from "@/@types";
 import { GetUsers } from "@/api/get-users";
 import { auth } from "@/auth";
 import { Header } from "@/components/header";
@@ -8,19 +8,11 @@ import { GetPlanner } from "@/services/get-planner"; // Supondo que você tenha 
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { TableTasks } from "./table-tasks";
-
-interface Props {
-  searchParams: {
-    plannerFilter: string;
-    statusFilter: string;
-  };
-}
 
 interface UserMap {
   [userId: string]: string;
@@ -30,7 +22,7 @@ interface PlannerMap {
   [plannerId: string]: string;
 }
 
-export default async function Home({ searchParams }: Props) {
+export default async function Home() {
   const session = await auth();
 
   if (!session || Date.now() >= new Date(session.expires).getTime()) {
@@ -86,9 +78,9 @@ export default async function Home({ searchParams }: Props) {
           <Card x-chunk="dashboard-06-chunk-0">
             <CardHeader>
               <CardTitle>Tarefas</CardTitle>
-              <CardDescription>
+              {/* <CardDescription>
                 Manage your products and view their sales performance.
-              </CardDescription>
+              </CardDescription> */}
             </CardHeader>
             <CardContent>
               <TableTasks
