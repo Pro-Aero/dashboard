@@ -1,28 +1,13 @@
-import { TaskWithUserIds } from "@/@types";
-import { GetUsers } from "@/api/get-users";
 import { auth } from "@/auth";
-import { Header } from "@/components/header";
 import { redirect } from "next/navigation";
-import { GetTasks } from "@/services/get-tasks";
-import { GetPlanner } from "@/services/get-planner"; // Supondo que você tenha uma função para isso
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { TableTasks } from "./table-tasks";
-
-interface UserMap {
-  [userId: string]: string;
-}
-
-interface PlannerMap {
-  [plannerId: string]: string;
-}
-
-export const runtime = "edge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TableTasks } from "./table-tasks-priority";
+import { ArrowRight } from "lucide-react";
+import { GetTasksPriority } from "@/services/get-tasks-priority";
+import { Separator } from "@/components/ui/separator";
+import { Component } from "./charts";
+import { GetHoursProject } from "@/services/get-hours-projects";
+import { Suspense } from "react";
 
 export default async function Home() {
   const session = await auth();
@@ -31,75 +16,40 @@ export default async function Home() {
     redirect("/auth/sign-in");
   }
 
-  const tasks: TaskWithUserIds[] = await GetTasks(session.user.accessToken);
-
-  // Obter IDs únicos de usuários atribuídos e criadores
-  const userIds = Array.from(
-    new Set(tasks.flatMap((task) => [task.creatorId, ...task.assignedUserIds]))
-  );
-
-  // Buscar detalhes dos usuários
-  const userDetails = await GetUsers(
-    userIds as string[],
-    session.user.accessToken
-  );
-
-  // Construir o mapa de IDs de usuários para nomes
-  const userMap: UserMap = {};
-
-  for (const user of userDetails) {
-    if (user) {
-      userMap[user.id] = user.displayName;
-    }
-  }
-
-  // Obter IDs únicos de planos
-  const plannerIds = Array.from(new Set(tasks.map((task) => task.plannerId)));
-
-  // Buscar detalhes dos planos
-  const plannerDetails = await Promise.all(
-    plannerIds.map((plannerId) =>
-      GetPlanner(plannerId, session.user.accessToken)
-    )
-  );
-
-  // Construir o mapa de IDs de planos para nomes
-  const plannerMap: PlannerMap = {};
-
-  for (const planner of plannerDetails) {
-    if (planner) {
-      plannerMap[planner.id] = planner.title; // Supondo que o nome do plano está no campo `title`
-    }
-  }
-
+  const tasksPriority = await GetTasksPriority();
+  const hoursProjects = await GetHoursProject();
   return (
-    <div className="space-y-4 py-4">
-      <Header />
-      <div className="flex min-h-screen w-[1400px] mx-auto flex-col mt-4">
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Tarefas</CardTitle>
-              {/* <CardDescription>
-                Manage your products and view their sales performance.
-              </CardDescription> */}
-            </CardHeader>
-            <CardContent>
-              <TableTasks
-                tasks={tasks}
-                userMap={userMap}
-                plannerMap={plannerMap}
-              />
-            </CardContent>
-            <CardFooter>
-              <div className="text-xs text-muted-foreground">
-                Showing <strong>1-10</strong> of{" "}
-                <strong>{tasks?.length}</strong> products
+    <div className="grid flex-1 items-start gap-4 p-4 sm:py-0 ">
+      <Card className="rounded-3xl">
+        <CardHeader>
+          <CardTitle className="flex">
+            <span>Tarefas prioritárias</span>
+            <div className="ml-auto px-2">
+              <ArrowRight className="size-6" />
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TableTasks tasksPriority={tasksPriority} />
+        </CardContent>
+      </Card>
+
+      <Card className="rounded-3xl">
+        <CardHeader>
+          <CardTitle>
+            <div className="flex items-center text-center">
+              <span>Distribuição de horas por projeto</span>
+              <div className="ml-auto">
+                <ArrowRight className="size-6" />
               </div>
-            </CardFooter>
-          </Card>
-        </main>
-      </div>
+            </div>
+            <Separator className="w-full h-px bg-gray-300 mt-2" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Component hoursProjects={hoursProjects} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
