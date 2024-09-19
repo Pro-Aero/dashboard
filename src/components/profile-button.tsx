@@ -7,9 +7,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { ButtonSignout } from "./sign-out/button-sign-out";
+import { ButtonSync } from "./button-sync";
 
 function getInitials(name: string): string {
   const initials = name
@@ -46,6 +48,10 @@ export async function ProfileButton() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
           <ButtonSignout />
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <ButtonSync />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

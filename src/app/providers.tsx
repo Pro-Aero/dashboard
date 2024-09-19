@@ -1,6 +1,7 @@
 "use client";
 import { ThemeProvider } from "next-themes";
 import { ReactNode } from "react";
+import { Toaster } from "sonner";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
@@ -9,6 +10,7 @@ export function Providers({ children }: { children: ReactNode }) {
       defaultTheme="dark"
       disableTransitionOnChange
     >
+      <Toaster position="top-right" />
       {children}
     </ThemeProvider>
   );

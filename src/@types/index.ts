@@ -60,9 +60,58 @@ export interface PlannerProps {
   };
 }
 
-export interface TaskWithUserIds {
-  task: TaskPlannerProps;
-  creatorId: string | null;
-  assignedUserIds: string[];
-  plannerId: string; // Adicionando o ID do plano
+export interface TasksPriority {
+  id: string;
+  bucketId: string;
+  title: string;
+  percentComplete: number;
+  priority: number;
+  startDateTime: string;
+  dueDateTime: string;
+  completedDateTime: string;
+  hours: number;
+  status: string;
+  planner: {
+    id: string;
+    title: string;
+  };
+  assignments: assignmentsProps[];
+}
+
+export interface assignmentsProps {
+  id: string;
+  name: string;
+}
+
+export interface hoursProjectsProps {
+  id: string;
+  groupId: string;
+  title: string;
+  owner: string;
+  totalHours: number;
+}
+
+export interface TasksSummary {
+  totalTasks: number;
+  taskCountsByPriority: {
+    low: number;
+    medium: number;
+    important: number;
+    urgent: number;
+  };
+}
+
+export interface WeeklyAvailability {
+  totalAvailableHours: number;
+  hoursOccupied: number;
+  hoursRemaining: number;
+}
+
+export interface ListUsersProps {
+  id: string;
+  displayName: string;
+  userPrincipalName: string;
+  mail: string;
+  jobTitle: string;
+  busyHours: number;
 }

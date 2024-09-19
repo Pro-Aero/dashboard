@@ -12,3 +12,8 @@ export const ClientId: string =
   process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID !== undefined
     ? process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID
     : "";
+
+export const ApiKey: string =
+  process.env.NEXTAUTH_API_KEY !== undefined
+    ? process.env.NEXTAUTH_API_KEY
+    : "";
