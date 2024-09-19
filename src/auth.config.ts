@@ -18,6 +18,8 @@ const config: NextAuthConfig = {
       authorization: {
         params: {
           scope: "openid email profile User.Read offline_access",
+          redirect_uri:
+            "https://dashboard.proaero.aero/api/auth/callback/azure-ad",
         },
       },
     }),

@@ -12,9 +12,7 @@ export function SignInButton() {
   const handleLoginClick = async () => {
     try {
       signIn("azure-ad", { prompt: "login" });
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   return (
