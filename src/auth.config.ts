@@ -1,6 +1,12 @@
 import type { NextAuthConfig } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
-import { ApiKey, ClientId, ClientSecret, TenantId } from "./utils/constants";
+import {
+  ApiKey,
+  ClientId,
+  ClientSecret,
+  RedirectURI,
+  TenantId,
+} from "./utils/constants";
 
 const Admins = [
   "maria.gabriela@proaero.aero",
@@ -18,6 +24,7 @@ const config: NextAuthConfig = {
       authorization: {
         params: {
           scope: "openid email profile User.Read offline_access",
+          redirect_uri: RedirectURI,
         },
       },
     }),

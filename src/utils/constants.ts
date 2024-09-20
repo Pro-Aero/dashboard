@@ -17,3 +17,11 @@ export const ApiKey: string =
   process.env.NEXTAUTH_API_KEY !== undefined
     ? process.env.NEXTAUTH_API_KEY
     : "";
+
+export const URL_NEXT: string =
+  process.env.NEXT_PUBLIC_URL !== undefined ? process.env.NEXT_PUBLIC_URL : "";
+
+export const RedirectURI: string =
+  process.env.NEXT_PUBLIC_REDIRECT_URI !== undefined
+    ? process.env.NEXT_PUBLIC_REDIRECT_URI
+    : "";
