@@ -1,12 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
-import {
-  ApiKey,
-  ClientId,
-  ClientSecret,
-  RedirectURI,
-  TenantId,
-} from "./utils/constants";
+import { ApiKey, ClientId, ClientSecret, TenantId } from "./utils/constants";
 
 const Admins = [
   "maria.gabriela@proaero.aero",
@@ -30,6 +24,9 @@ const config: NextAuthConfig = {
   ],
 
   callbacks: {
+    // async redirect({ url, baseUrl }) {
+    //   return baseUrl; // garante que a URL correta seja usada
+    // },
     async signIn({ account, profile }) {
       if (account?.provider === "azure-ad" && profile) {
         return true;

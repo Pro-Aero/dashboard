@@ -12,7 +12,11 @@ export function SignInButton() {
 
   const handleLoginClick = async () => {
     try {
-      signIn("azure-ad", { prompt: "login" });
+      signIn("azure-ad", {
+        prompt: "login",
+        redirect: false,
+        callbackUrl: RedirectURI,
+      });
     } catch (error) {}
   };
 
