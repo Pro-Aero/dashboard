@@ -22,7 +22,6 @@ const config: NextAuthConfig = {
       clientSecret: ClientSecret,
       tenantId: TenantId,
       authorization: {
-        // offline_access
         params: {
           scope:
             "openid email profile User.Read api://722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984/read",
@@ -41,26 +40,33 @@ const config: NextAuthConfig = {
     },
     jwt: async ({ token, account, user }: any) => {
       if (token) {
-        const res = await fetch(
-          `http://34.238.193.94:3000/users?mail=${token.email}`,
-          {
-            method: "GET",
-            headers: {
-              "x-api-key": `${ApiKey}`,
-              "Content-Type": "application/json",
-            },
+        try {
+          const res = await fetch(
+            `http://34.238.193.94:3000/users?mail=${token.email}`,
+            {
+              method: "GET",
+              headers: {
+                "x-api-key": `${ApiKey}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (!res.ok) throw new Error("Failed to fetch user data");
+
+          const data = await res.json();
+          const role = Admins.includes(token.email) ? "admin" : "member";
+
+          if (data.length > 0) {
+            return {
+              ...token,
+              id: data[0].id,
+              role,
+            };
           }
-        );
-
-        const data = await res.json();
-
-        const role = Admins.includes(token.email) ? "admin" : "member";
-        if (data) {
-          return {
-            ...token,
-            id: data[0].id,
-            role,
-          };
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          return token; // Retorna o token original em caso de erro
         }
       }
     },
