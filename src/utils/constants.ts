@@ -17,3 +17,8 @@ export const ApiKey: string =
   process.env.NEXT_PUBLIC_NEXTAUTH_API_KEY !== undefined
     ? process.env.NEXT_PUBLIC_NEXTAUTH_API_KEY
     : "";
+
+export const RedirectUri: string =
+  process.env.NEXT_PUBLIC_REDIRECT_URI !== undefined
+    ? process.env.NEXT_PUBLIC_REDIRECT_URI
+    : "";
