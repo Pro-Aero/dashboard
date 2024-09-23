@@ -25,7 +25,9 @@ const config: NextAuthConfig = {
         params: {
           scope:
             "openid email profile User.Read https://dashboard.proaero.aero/read",
-          redirect_uri: `${RedirectUri}`,
+          // redirect_uri: `${RedirectUri}`,
+          redirect_uri:
+            "https://dashboard.proaero.aero/api/auth/callback/azure-ad",
         },
       },
     }),

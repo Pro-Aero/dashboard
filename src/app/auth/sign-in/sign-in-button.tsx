@@ -10,9 +10,7 @@ export function SignInButton() {
   const [loading, setLoading] = useState(false);
 
   const handleLoginClick = async () => {
-    signIn("azure-ad", {
-      redirect: false,
-    });
+    await signIn("azure-ad");
   };
 
   return (
