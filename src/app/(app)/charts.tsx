@@ -16,8 +16,6 @@ import {
 } from "@/components/ui/chart";
 import { hoursProjectsProps } from "@/@types";
 
-export const description = "A bar chart with a label and custom tooltip";
-
 const chartConfig = {
   desktop: {
     color: "#1B2476",

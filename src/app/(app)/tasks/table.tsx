@@ -87,14 +87,18 @@ export function TableTasksById({ tasks }: Props) {
               <TableCell className="font-base text-black dark:text-white text-center p-2">
                 <Badge
                   className={`${
-                    item.status === "" || item.status === null
-                      ? "bg-error hover:bg-error"
+                    item.status === "Overdue"
+                      ? "bg-red-800 hover:bg-red-800"
+                      : item.status === null || item.status === ""
+                      ? "bg-zinc-800 hover:bg-zinc-800"
                       : item.status === "InProgress"
                       ? "bg-review hover:bg-review"
                       : "bg-success hover:bg-success"
                   } text-white text-xs font-semibold`}
                 >
-                  {item.status === "" || item.status === null
+                  {item.status === "Overdue"
+                    ? "Atrasado"
+                    : item.status === null || item.status === ""
                     ? "Não iniciado"
                     : item.status === "InProgress"
                     ? "Em progresso"

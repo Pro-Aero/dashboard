@@ -99,14 +99,18 @@ export function TableTasks({ tasksPriority }: Props) {
               <TableCell className="font-base text-black text-center dark:text-white ">
                 <Badge
                   className={`${
-                    item.status === "" || item.status === null
+                    item.status === "Overdue"
                       ? "bg-red-800 hover:bg-red-800"
+                      : item.status === null || item.status === ""
+                      ? "bg-zinc-800 hover:bg-zinc-800"
                       : item.status === "InProgress"
                       ? "bg-blue-800 hover:bg-blue-800"
                       : "bg-green-800 hover:bg-green-800"
                   } text-white text-xs font-semibold`}
                 >
-                  {item.status === "" || item.status === null
+                  {item.status === "Overdue"
+                    ? "Atrasado"
+                    : item.status === null || item.status === ""
                     ? "Não iniciado"
                     : item.status === "InProgress"
                     ? "Em progresso"

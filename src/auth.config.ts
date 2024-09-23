@@ -12,7 +12,7 @@ const Admins = [
   "maria.gabriela@proaero.aero",
   "marcelo.araujo@proaero.aero",
   "vladimir.brandi@proaero.aero",
-  // "joao.priante@proaero.aero",
+  "joao.priante@proaero.aero",
 ];
 
 const config: NextAuthConfig = {
@@ -25,9 +25,7 @@ const config: NextAuthConfig = {
         params: {
           scope:
             "openid email profile User.Read https://dashboard.proaero.aero/read",
-          // redirect_uri: `${RedirectUri}`,
-          redirect_uri:
-            "https://dashboard.proaero.aero/api/auth/callback/azure-ad",
+          redirect_uri: `${RedirectUri}`,
         },
       },
     }),
@@ -78,10 +76,31 @@ const config: NextAuthConfig = {
       session.user.accessToken = token.accessToken as string;
       return session;
     },
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = Boolean(auth?.user);
+
+      const isOnPublicPages = nextUrl.pathname.startsWith("/auth");
+      const isOnPublicAPIRoutes = nextUrl.pathname.startsWith("/api/auth");
+      const isOnAPIRoutes = nextUrl.pathname.startsWith("/api");
+
+      if (isOnPublicAPIRoutes) {
+        return true;
+      }
+
+      if (isOnPublicPages && isLoggedIn) {
+        return Response.redirect(new URL("/", nextUrl));
+      }
+
+      if (isOnAPIRoutes && !isLoggedIn) {
+        return Response.json({ message: "Unauthorized." }, { status: 401 });
+      }
+
+      return true;
+    },
   },
   secret: "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2",
   trustHost: true,
   debug: process.env.NODE_ENV === "development",
-};
+} satisfies NextAuthConfig;
 
 export default config;
