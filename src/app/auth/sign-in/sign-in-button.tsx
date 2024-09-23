@@ -12,6 +12,7 @@ export function SignInButton() {
   const handleLoginClick = async () => {
     signIn("azure-ad", {
       prompt: "login",
+      callbackUrl: "https://dashboard.proaero.aero",
     });
   };
 
