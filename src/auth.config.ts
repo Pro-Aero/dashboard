@@ -25,7 +25,10 @@ const config: NextAuthConfig = {
         params: {
           scope:
             "openid email profile User.Read https://dashboard.proaero.aero/read",
-          redirect_uri: `${RedirectUri}`,
+          redirect_uri:
+            process.env.NODE_ENV === "production"
+              ? "https://dashboard.proaero.aero/api/auth/callback/azure-ad"
+              : "http://localhost:3000/api/auth/callback/azure-ad",
         },
       },
     }),
@@ -33,7 +36,7 @@ const config: NextAuthConfig = {
 
   callbacks: {
     async signIn({ account, profile }) {
-      if (account?.provider === "azure-ad" && profile) {
+      if (account?.provider === "azure-ad") {
         return true;
       }
       return false;
@@ -66,11 +69,11 @@ const config: NextAuthConfig = {
           }
         } catch (error) {
           console.error("Error fetching user data:", error);
-          return token; // Retorna o token original em caso de erro
+          return token;
         }
       }
     },
-    async session({ session, token }) {
+    session({ session, token }) {
       session.user.id = token.id as string;
       session.user.role = token.role as string;
       session.user.accessToken = token.accessToken as string;
