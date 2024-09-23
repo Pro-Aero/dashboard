@@ -24,9 +24,6 @@ const config: NextAuthConfig = {
   ],
 
   callbacks: {
-    // async redirect({ url, baseUrl }) {
-    //   return baseUrl; // garante que a URL correta seja usada
-    // },
     async signIn({ account, profile }) {
       if (account?.provider === "azure-ad" && profile) {
         return true;

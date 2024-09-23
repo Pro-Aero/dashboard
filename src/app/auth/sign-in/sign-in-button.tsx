@@ -5,19 +5,14 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { ClientId, RedirectURI, TenantId, URL_NEXT } from "@/utils/constants";
 
 export function SignInButton() {
   const [loading, setLoading] = useState(false);
 
   const handleLoginClick = async () => {
-    try {
-      signIn("azure-ad", {
-        prompt: "login",
-        redirect: false,
-        callbackUrl: RedirectURI,
-      });
-    } catch (error) {}
+    signIn("azure-ad", {
+      prompt: "login",
+    });
   };
 
   return (
