@@ -24,7 +24,7 @@ const config: NextAuthConfig = {
       authorization: {
         params: {
           scope: "openid email profile User.Read offline_access",
-          redirect_uri: RedirectUri,
+          redirect_uri: `${RedirectUri}`,
         },
       },
     }),
