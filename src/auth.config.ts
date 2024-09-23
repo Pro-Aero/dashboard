@@ -12,7 +12,7 @@ const Admins = [
   "maria.gabriela@proaero.aero",
   "marcelo.araujo@proaero.aero",
   "vladimir.brandi@proaero.aero",
-  "joao.priante@proaero.aero",
+  // "joao.priante@proaero.aero",
 ];
 
 const config: NextAuthConfig = {
@@ -24,7 +24,7 @@ const config: NextAuthConfig = {
       authorization: {
         params: {
           scope:
-            "openid email profile User.Read api://722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984/read",
+            "openid email profile User.Read https://dashboard.proaero.aero/read",
           redirect_uri: `${RedirectUri}`,
         },
       },
