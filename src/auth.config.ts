@@ -25,7 +25,7 @@ const config: NextAuthConfig = {
         // offline_access
         params: {
           scope:
-            "openid email profile User.Read api://722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984",
+            "openid email profile User.Read api://722a0cfe-2fb3-4f33-9c6c-66cdaf7f9984/read",
           redirect_uri: `${RedirectUri}`,
         },
       },
