@@ -47,32 +47,32 @@ const config: NextAuthConfig = {
       }
       return false;
     },
-    jwt: async ({ token, account, user }: any) => {
+    async jwt({ token, account, user }: any) {
       if (token) {
         try {
-          const res = await fetch(
-            `http://34.238.193.94:3000/users?mail=${token.email}`,
-            {
-              method: "GET",
-              headers: {
-                "x-api-key": `${ApiKey}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
+          // const res = await fetch(
+          //   `http://34.238.193.94:3000/users?mail=${token.email}`,
+          //   {
+          //     method: "GET",
+          //     headers: {
+          //       "x-api-key": `${ApiKey}`,
+          //       "Content-Type": "application/json",
+          //     },
+          //   }
+          // );
 
-          if (!res.ok) throw new Error("Failed to fetch user data");
+          // if (!res.ok) throw new Error("Failed to fetch user data");
 
-          const data = await res.json();
+          // const data = await res.json();
           const role = Admins.includes(token.email) ? "admin" : "member";
 
-          if (data.length > 0) {
-            return {
-              ...token,
-              id: data[0].id,
-              role,
-            };
-          }
+          // if (data.length > 0) {
+          return {
+            ...token,
+            // id: data[0].id,
+            role,
+            // };
+          };
         } catch (error) {
           console.error("Error fetching user data:", error);
           return token;
@@ -85,27 +85,27 @@ const config: NextAuthConfig = {
       session.user.accessToken = token.accessToken as string;
       return session;
     },
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = Boolean(auth?.user);
+    // authorized({ auth, request: { nextUrl } }) {
+    //   const isLoggedIn = Boolean(auth?.user);
 
-      const isOnPublicPages = nextUrl.pathname.startsWith("/auth");
-      const isOnPublicAPIRoutes = nextUrl.pathname.startsWith("/api/auth");
-      const isOnAPIRoutes = nextUrl.pathname.startsWith("/api");
+    //   const isOnPublicPages = nextUrl.pathname.startsWith("/auth");
+    //   const isOnPublicAPIRoutes = nextUrl.pathname.startsWith("/api/auth");
+    //   const isOnAPIRoutes = nextUrl.pathname.startsWith("/api");
 
-      if (isOnPublicAPIRoutes) {
-        return true;
-      }
+    //   if (isOnPublicAPIRoutes) {
+    //     return true;
+    //   }
 
-      if (isOnPublicPages && isLoggedIn) {
-        return Response.redirect(new URL("/", nextUrl));
-      }
+    //   if (isOnPublicPages && isLoggedIn) {
+    //     return Response.redirect(new URL("/", nextUrl));
+    //   }
 
-      if (isOnAPIRoutes && !isLoggedIn) {
-        return Response.json({ message: "Unauthorized." }, { status: 401 });
-      }
+    //   if (isOnAPIRoutes && !isLoggedIn) {
+    //     return Response.json({ message: "Unauthorized." }, { status: 401 });
+    //   }
 
-      return true;
-    },
+    //   return true;
+    // },
   },
   secret: "LGv8Q~zNeWxZWUYwvrvFhN08p1FFcDrhbDNrTaO2",
   trustHost: true,
