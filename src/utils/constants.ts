@@ -14,8 +14,8 @@ export const ClientId: string =
     : "";
 
 export const ApiKey: string =
-  process.env.NEXT_PUBLIC_NEXTAUTH_API_KEY !== undefined
-    ? process.env.NEXT_PUBLIC_NEXTAUTH_API_KEY
+  process.env.NEXTAUTH_API_KEY !== undefined
+    ? process.env.NEXTAUTH_API_KEY
     : "";
 
 export const RedirectUri: string =
