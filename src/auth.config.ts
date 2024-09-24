@@ -23,8 +23,7 @@ const config: NextAuthConfig = {
       tenantId: TenantId,
       authorization: {
         params: {
-          scope:
-            "openid email profile User.Read https://dashboard.proaero.aero/read",
+          scope: "openid email profile User.Read",
           redirect_uri:
             process.env.NODE_ENV === "production"
               ? "https://dashboard.proaero.aero/api/auth/callback/azure-ad"
@@ -35,6 +34,13 @@ const config: NextAuthConfig = {
   ],
 
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      if (process.env.NODE_ENV === "development") {
+        return baseUrl;
+      } else {
+        return "https://dashboard.proaero.aero";
+      }
+    },
     async signIn({ account, profile }) {
       if (account?.provider === "azure-ad") {
         return true;
