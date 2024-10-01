@@ -16,21 +16,22 @@ const config: NextAuthConfig = {
       tenantId: process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID!,
       authorization: {
         params: {
-          scope: "openid offline_access email profile User.Read",
+          scope: "openid email profile User.Read",
+          redirect_uri: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/`,
         },
       },
     }),
   ],
 
   callbacks: {
-    async signIn({ account, profile }) {
+    signIn({ account, profile }) {
       if (account?.provider === "azure-ad") {
         return true;
       }
 
       return false;
     },
-    async jwt({ token }) {
+    jwt({ token }) {
       if (token && token.email) {
         const role = adminEmails.includes(token.email) ? "admin" : "member";
         return {
