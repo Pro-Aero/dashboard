@@ -5,9 +5,9 @@ import { TableTasks } from "./table-tasks-priority";
 import { ArrowRight } from "lucide-react";
 import { GetTasksPriority } from "@/services/get-tasks-priority";
 import { Separator } from "@/components/ui/separator";
-import { Component } from "./charts";
+// import { Component } from "./charts";
 import { GetHoursProject } from "@/services/get-hours-projects";
-import { TeamTimelineChart } from "./chart";
+// import { TeamTimelineChart } from "./chart";
 import { GetHoursWorkedTeam } from "@/services/get-team-worked-hours";
 
 export default async function Home() {
@@ -37,9 +37,9 @@ export default async function Home() {
         </CardContent>
       </Card>
 
-      <TeamTimelineChart teamData={data} />
+      {/* <TeamTimelineChart teamData={data} /> */}
 
-      <Card className="rounded-3xl mt-10 mb-10">
+      {/* <Card className="rounded-3xl mt-10 mb-10">
         <CardHeader>
           <CardTitle>
             <div className="flex items-center text-center">
@@ -54,7 +54,7 @@ export default async function Home() {
         <CardContent>
           <Component hoursProjects={hoursProjects} />
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }

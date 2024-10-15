@@ -18,7 +18,7 @@ const config: NextAuthConfig = {
       authorization: {
         params: {
           scope: "openid email profile User.Read",
-          redirect_uri: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/auth/callback/azure-ad`,
+          redirect_uri: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api`,
         },
       },
     }),
