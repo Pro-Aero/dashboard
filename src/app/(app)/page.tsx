@@ -7,6 +7,8 @@ import { GetTasksPriority } from "@/services/get-tasks-priority";
 import { Separator } from "@/components/ui/separator";
 import { Component } from "./charts";
 import { GetHoursProject } from "@/services/get-hours-projects";
+import { TeamTimelineChart } from "./chart";
+import { GetHoursWorkedTeam } from "@/services/get-team-worked-hours";
 
 export default async function Home() {
   const session = await auth();
@@ -17,10 +19,11 @@ export default async function Home() {
 
   const tasksPriority = await GetTasksPriority();
   const hoursProjects = await GetHoursProject();
+  const data = await GetHoursWorkedTeam();
 
   return (
-    <div className="grid flex-1 items-start gap-4 p-4 sm:py-0 ">
-      <Card className="rounded-3xl">
+    <div className="flex-col flex-1 items-start gap-4 p-4 sm:py-0 ">
+      <Card className="rounded-3xl mt-10 mb-10">
         <CardHeader>
           <CardTitle className="flex">
             <span>Tarefas prioritárias</span>
@@ -34,7 +37,9 @@ export default async function Home() {
         </CardContent>
       </Card>
 
-      <Card className="rounded-3xl">
+      <TeamTimelineChart teamData={data} />
+
+      <Card className="rounded-3xl mt-10 mb-10">
         <CardHeader>
           <CardTitle>
             <div className="flex items-center text-center">

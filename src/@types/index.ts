@@ -115,3 +115,22 @@ export interface ListUsersProps {
   jobTitle: string;
   busyHours: number;
 }
+
+export interface TeamWorkedHoursProps {
+  userId: string;
+  userName: string;
+  tasksPerDays: {
+    date: {
+      totalHours: number;
+      tasks: TasksTeamWorkedProps[];
+      isWeekend: boolean;
+    };
+  };
+}
+
+export interface TasksTeamWorkedProps {
+  taskId: string;
+  title: string;
+  hours: number;
+  status: string;
+}
