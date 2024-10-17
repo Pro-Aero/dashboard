@@ -2,7 +2,7 @@ import { TeamWorkedHoursProps } from "@/@types";
 import { ApiKey } from "@/utils/constants";
 
 export async function GetHoursWorkedTeam() {
-  const teste = "http://34.238.193.94:3000";
+  const teste = "http://3.219.224.207:3000";
   const url = `${teste}/graphs/team/availability
 `;
   const response = await fetch(url, {

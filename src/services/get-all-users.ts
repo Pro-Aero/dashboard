@@ -1,7 +1,7 @@
 import { ApiKey } from "@/utils/constants";
 
 export async function GetAllUsers() {
-  const url = `http://34.238.193.94:3000/users`;
+  const url = `http://3.219.224.207:3000/users`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

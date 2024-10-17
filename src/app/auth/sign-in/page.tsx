@@ -6,10 +6,13 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 
 import Logo from "@/assets/logo.png";
+import { env } from "@/env";
 
 export const metadata: Metadata = {
   title: "Sign In",
 };
+
+console.log(env);
 
 export default async function SignInPage() {
   const session = await auth();
