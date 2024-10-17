@@ -73,7 +73,7 @@
 //         x: new Date(date).valueOf(),
 //         y: userIndex + 0.5,
 //         date,
-//         tasks: dayData.tasks,
+//         tasks: dayData.tasks.filter((task) => task.status !== "Completed"),
 //         isWeekend: dayData.isWeekend,
 //         userName: userData.userName,
 //       }))
@@ -82,27 +82,35 @@
 //   }, [teamData]);
 
 //   const filteredChartData = useMemo(() => {
-//     const data =
-//       selectedUser === "all"
-//         ? chartData
-//         : chartData.filter((data) => data.userName === selectedUser);
-
-//     if (selectedUser !== "all") {
-//       // Spread tasks vertically when a single user is selected
-//       return data.map((item, index) => ({
+//     const currentYear = new Date().getFullYear();
+//     const startOfMay = new Date(currentYear, 4, 1).valueOf();
+//     const data = chartData
+//       .filter(
+//         (item) =>
+//           item.x >= startOfMay &&
+//           item.tasks.some((task) => task.status !== "Completed")
+//       )
+//       .map((item) => ({
 //         ...item,
-//         y: index * 0.5 + 0.5,
+//         tasks: item.tasks.filter((task) => task.status !== "Completed"),
 //       }));
+//     if (selectedUser !== "all") {
+//       return data
+//         .filter((item) => item.userName === selectedUser)
+//         .map((item, index) => ({
+//           ...item,
+//           y: index * 0.5 + 0.5,
+//         }));
 //     }
-
 //     return data;
 //   }, [chartData, selectedUser]);
 
 //   const xDomain = useMemo(() => {
 //     const currentYear = new Date().getFullYear();
-//     const startOfYear = new Date(currentYear, 0, 1).valueOf();
-//     const endOfYear = new Date(currentYear, 11, 31).valueOf();
-//     return [startOfYear, endOfYear];
+//     return [
+//       new Date(currentYear, 4, 1).valueOf(), // May 1st
+//       new Date(currentYear, 11, 31).valueOf(), // December 31st
+//     ];
 //   }, []);
 
 //   const yDomain = useMemo(() => {
@@ -178,9 +186,20 @@
 //                   domain={xDomain}
 //                   tickFormatter={formatXAxis}
 //                   stroke="hsl(var(--primary))"
-//                   ticks={Array.from({ length: 12 }, (_, i) =>
-//                     new Date(new Date().getFullYear(), i, 1).valueOf()
-//                   )}
+//                   ticks={(() => {
+//                     const [start, end] = xDomain;
+//                     const startDate = new Date(start);
+//                     const endDate = new Date(end);
+//                     const ticks = [];
+//                     for (
+//                       let d = startDate;
+//                       d <= endDate;
+//                       d.setMonth(d.getMonth() + 1)
+//                     ) {
+//                       ticks.push(new Date(d).valueOf());
+//                     }
+//                     return ticks;
+//                   })()}
 //                 />
 //                 <YAxis
 //                   type="number"
@@ -227,8 +246,8 @@
 
 // const CustomShape = (props: any) => {
 //   const { cx, cy, payload } = props;
-//   const barHeight = 22;
-//   const barWidth = 25;
+//   const barHeight = 24;
+//   const barWidth = 18;
 
 //   const color = stringToColor(payload.userName);
 
@@ -243,16 +262,6 @@
 //         rx={4}
 //         ry={4}
 //       />
-//       {/* <text
-//         x={cx + 5}
-//         y={cy}
-//         dy={4}
-//         fill="white"
-//         fontSize={10}
-//         className="font-bold"
-//       >
-//         -
-//       </text> */}
 //     </g>
 //   );
 // };
@@ -273,10 +282,12 @@
 //             </p>
 //             <p className="text-muted-foreground">
 //               Status:{" "}
-//               {task.status === "Completed"
-//                 ? "Completo"
-//                 : task.status === "notStarted"
+//               {task.status === "NotStarted"
 //                 ? "Não iniciado"
+//                 : task.status === "Overdue"
+//                 ? "Atrasada"
+//                 : task.status === "Completed"
+//                 ? "Completo"
 //                 : "Em andamento"}
 //             </p>
 //           </div>

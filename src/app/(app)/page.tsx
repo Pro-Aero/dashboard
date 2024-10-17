@@ -9,6 +9,8 @@ import { Separator } from "@/components/ui/separator";
 import { GetHoursProject } from "@/services/get-hours-projects";
 // import { TeamTimelineChart } from "./chart";
 import { GetHoursWorkedTeam } from "@/services/get-team-worked-hours";
+import { Component } from "./charts";
+// import TeamTimelineChart from "./chart";
 
 export default async function Home() {
   const session = await auth();
@@ -39,7 +41,7 @@ export default async function Home() {
 
       {/* <TeamTimelineChart teamData={data} /> */}
 
-      {/* <Card className="rounded-3xl mt-10 mb-10">
+      <Card className="rounded-3xl mt-10 mb-10">
         <CardHeader>
           <CardTitle>
             <div className="flex items-center text-center">
@@ -54,7 +56,7 @@ export default async function Home() {
         <CardContent>
           <Component hoursProjects={hoursProjects} />
         </CardContent>
-      </Card> */}
+      </Card>
     </div>
   );
 }

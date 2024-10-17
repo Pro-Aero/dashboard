@@ -14,11 +14,10 @@ const config: NextAuthConfig = {
       clientId: process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID!,
       clientSecret: process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_SECRET!,
       tenantId: process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID!,
-
       authorization: {
         params: {
-          scope: "openid email profile User.Read",
-          redirect_uri: `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/auth/callback/azure-ad`,
+          scope: "openid email profile User.Read offline_access Calendars.Read",
+          redirect_uri: `https://dashboard2.proaero.aero/api/auth/callback/azure-ad`,
         },
       },
     }),
