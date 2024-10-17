@@ -8,7 +8,7 @@ export async function GetHoursWorkedTeam() {
   const response = await fetch(url, {
     method: "GET",
     headers: {
-      "x-api-key": `${ApiKey}`,
+      "x-api-key": `${process.env.NEXTAUTH_API}`,
       "Content-Type": "application/json",
     },
   });

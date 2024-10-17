@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
-import { env } from "./env";
 
 const adminEmails = [
   "maria.gabriela@proaero.aero",
@@ -9,18 +8,16 @@ const adminEmails = [
   "joao.priante@proaero.aero",
 ];
 
-console.log(env);
-
 const config: NextAuthConfig = {
   providers: [
     AzureADProvider({
-      clientId: env.AZURE_AD_CLIENT_ID,
-      clientSecret: env.AZURE_AD_CLIENT_SECRET,
-      tenantId: env.AZURE_AD_TENANT_ID,
+      clientId: process.env.AZURE_AD_CLIENT_ID,
+      clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+      tenantId: process.env.AZURE_AD_TENANT_ID,
       authorization: {
         params: {
           scope: "openid email profile User.Read offline_access ",
-          redirect_uri: `${env.NEXTAUTH_URL}/api/auth/callback/azure-ad`,
+          redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/azure-ad`,
         },
       },
     }),
