@@ -5,7 +5,7 @@ export async function GetAllUsers() {
   const response = await fetch(url, {
     method: "GET",
     headers: {
-      "x-api-key": `${process.env.NEXTAUTH_API}`,
+      "x-api-key": `${ApiKey}`,
       "Content-Type": "application/json",
     },
   });
