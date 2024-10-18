@@ -5,12 +5,11 @@ import { TableTasks } from "./table-tasks-priority";
 import { ArrowRight } from "lucide-react";
 import { GetTasksPriority } from "@/services/get-tasks-priority";
 import { Separator } from "@/components/ui/separator";
-// import { Component } from "./charts";
 import { GetHoursProject } from "@/services/get-hours-projects";
-// import { TeamTimelineChart } from "./chart";
 import { GetHoursWorkedTeam } from "@/services/get-team-worked-hours";
 import { Component } from "./charts";
 // import TeamTimelineChart from "./chart";
+import Timeline from "./timeline";
 
 export default async function Home() {
   const session = await auth();
@@ -39,7 +38,7 @@ export default async function Home() {
         </CardContent>
       </Card>
 
-      {/* <TeamTimelineChart teamData={data} /> */}
+      <Timeline teamData={data} />
 
       <Card className="rounded-3xl mt-10 mb-10">
         <CardHeader>

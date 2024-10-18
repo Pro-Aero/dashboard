@@ -43,17 +43,15 @@ export function TableTasksById({ tasks }: Props) {
           </TableHead>
         </TableRow>
       </TableHeader>
-      {tasks &&
+      {tasks.length > 0 ? (
         tasks.map((item, index) => (
           <TableBody key={index}>
             <TableRow>
               <TableCell className="font-base text-black dark:text-white text-left p-2">
-                {
-                  item.title
-                    .replace(/\([^)]*\)/g, "") // Remove tudo que está entre parênteses
-                    .split("-")[0] // Divide a string pelo "-"
-                    .trim() // Remove espaços em branco extras
-                }
+                {item.title
+                  .replace(/\([^)]*\)/g, "")
+                  .split("-")[0]
+                  .trim()}
               </TableCell>
 
               <TableCell className="font-base text-black dark:text-white text-left p-2">
@@ -107,7 +105,16 @@ export function TableTasksById({ tasks }: Props) {
               </TableCell>
             </TableRow>
           </TableBody>
-        ))}
+        ))
+      ) : (
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-base text-base text-black dark:text-white p-2">
+              Não há tarefas.
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      )}
     </Table>
   );
 }

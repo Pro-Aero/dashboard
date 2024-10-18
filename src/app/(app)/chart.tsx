@@ -49,15 +49,6 @@
 //   tasksPerDays: TasksPerDays;
 // }
 
-// type DataPoint = {
-//   x: number;
-//   y: number;
-//   date: string;
-//   tasks: Task[];
-//   isWeekend: boolean;
-//   userName: string;
-// };
-
 // interface Props {
 //   teamData: UserTaskData[];
 // }

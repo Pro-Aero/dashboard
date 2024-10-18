@@ -18,7 +18,7 @@ interface Props {
 export default async function Tasks({ searchParams }: Props) {
   const session = await auth();
 
-  if (!session || Date.now() >= new Date(session.expires).getTime()) {
+  if (!session) {
     redirect("/auth/sign-in");
   }
 

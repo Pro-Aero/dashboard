@@ -1,6 +1,5 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Pie, PieChart } from "recharts";
 
 import {
@@ -120,7 +119,10 @@ export default function ChartPriorityTask({ tasksSummary }: Props) {
               ></div>
               <span className="capitalize">{item.categoria}:</span>
               <span className="font-bold">
-                {Math.round((item.valor / totalValue) * 100).toFixed(1)}%
+                {item.valor
+                  ? ((item.valor / totalValue) * 100).toFixed(1)
+                  : "0.0"}
+                %
               </span>
             </div>
           ))}

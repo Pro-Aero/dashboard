@@ -13,8 +13,6 @@ export async function GetHoursWorkedTeam() {
     },
   });
 
-  console.log(response);
-
   const data: TeamWorkedHoursProps[] = await response.json();
   return data;
 }

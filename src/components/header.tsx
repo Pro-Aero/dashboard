@@ -51,7 +51,6 @@ export async function Header() {
       </nav>
 
       <div className="flex items-center gap-4">
-        {/* <PendingInvites /> */}
         <ThemeSwitcher />
         <Separator orientation="vertical" className="h-5" />
         <ProfileButton />

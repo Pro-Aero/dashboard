@@ -17,3 +17,8 @@ export const ApiKey: string =
   process.env.NEXT_PUBLIC_NEXTAUTH_API !== undefined
     ? process.env.NEXT_PUBLIC_NEXTAUTH_API
     : "";
+
+export const ApiKeyServer: string =
+  process.env.NEXTAUTH_API_SERVER !== undefined
+    ? process.env.NEXTAUTH_API_SERVER
+    : "";

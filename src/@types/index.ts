@@ -120,10 +120,12 @@ export interface TeamWorkedHoursProps {
   userId: string;
   userName: string;
   tasksPerDays: {
-    date: {
+    [date: string]: {
       totalHours: number;
       tasks: TasksTeamWorkedProps[];
       isWeekend: boolean;
+      availableHours: number;
+      workedHours: number;
     };
   };
 }
