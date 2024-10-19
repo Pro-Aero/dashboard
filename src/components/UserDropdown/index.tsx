@@ -11,12 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ListUsersProps } from "@/@types";
+import { UserResponse } from "@/services/users";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface Props {
-  listUsers: ListUsersProps[];
+  listUsers: UserResponse[];
   employee: string;
 }
 

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import { SignInButton } from "./sign-in-button";
+import { SignInButton } from "@/app/auth/sign-in/sign-in-button";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Image from "next/image";

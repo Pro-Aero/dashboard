@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { FormEvent, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { SignIn } from "./actions";
+import { SignIn } from "@/app/auth/sign-in/actions";
 
 export function SignInButton() {
   const [loading, setLoading] = useState(false);

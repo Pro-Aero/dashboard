@@ -15,7 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { WeeklyAvailability } from "@/@types";
+import { WeeklyAvailability } from "@/services/tasks";
 
 const chartConfig = {
   azul: {

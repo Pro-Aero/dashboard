@@ -1,13 +1,13 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ChartPriorityTask from "./priority-task-chart";
-import ChartAvailabilityTask from "./availability-hours-charts";
-import { GetTasksById } from "@/services/get-tasks-by-id";
-import { TableTasksById } from "./table";
-import { GetStatusTasksById } from "@/services/get-status-tasks-by-id";
-import { GetAllUsers } from "@/services/get-all-users";
-import { SelectUser } from "./select-user";
+import ChartPriorityTask from "../../../components/PriorityChart";
+import ChartAvailabilityTask from "../../../components/AvailabilityHours";
+import { GetTasksById } from "@/services/tasks";
+import { TableTasksById } from "../../../components/UserTasks";
+import { GetStatusTasksById } from "@/services/tasks";
+import { GetAllUsers } from "@/services/users";
+import { SelectUser } from "../../../components/UserDropdown";
 
 interface Props {
   searchParams: {

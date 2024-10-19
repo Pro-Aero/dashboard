@@ -1,15 +1,15 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TableTasks } from "./table-tasks-priority";
+import { TableTasks } from "../../components/PriorityTasks";
 import { ArrowRight } from "lucide-react";
-import { GetTasksPriority } from "@/services/get-tasks-priority";
+import { GetTasksPriority } from "@/services/tasks";
 import { Separator } from "@/components/ui/separator";
-import { GetHoursProject } from "@/services/get-hours-projects";
-import { GetHoursWorkedTeam } from "@/services/get-team-worked-hours";
-import { Component } from "./charts";
+import { GetHoursProject } from "@/services/planners";
+import { GetHoursWorkedTeam } from "@/services/tasks";
+import { Component } from "@/components/Charts";
 // import TeamTimelineChart from "./chart";
-import Timeline from "./timeline";
+import Timeline from "@/components/TimeLine";
 
 export default async function Home() {
   const session = await auth();
@@ -34,7 +34,7 @@ export default async function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <TableTasks tasksPriority={tasksPriority} />
+          <TableTasks tasks={tasksPriority} />
         </CardContent>
       </Card>
 

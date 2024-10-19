@@ -1,6 +1,6 @@
 "use client";
 
-import { TasksPriority } from "@/@types";
+import { TasksResponse } from "@/services/tasks";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 
 interface Props {
-  tasks: TasksPriority[];
+  tasks: TasksResponse[];
 }
 
 export function TableTasksById({ tasks }: Props) {
@@ -49,7 +49,6 @@ export function TableTasksById({ tasks }: Props) {
             <TableRow>
               <TableCell className="font-base text-black dark:text-white text-left p-2">
                 {item.title
-                  .replace(/\([^)]*\)/g, "")
                   .split("-")[0]
                   .trim()}
               </TableCell>

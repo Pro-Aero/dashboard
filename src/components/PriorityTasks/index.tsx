@@ -1,6 +1,6 @@
 "use client";
 
-import { TasksPriority } from "@/@types";
+import { TasksResponse } from "@/services/tasks";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/table";
 
 interface Props {
-  tasksPriority: TasksPriority[];
+  tasks: TasksResponse[];
 }
 
-export function TableTasks({ tasksPriority }: Props) {
+export function TableTasks({ tasks }: Props) {
   return (
     <Table>
       <TableHeader>
@@ -49,8 +49,8 @@ export function TableTasks({ tasksPriority }: Props) {
           </TableHead>
         </TableRow>
       </TableHeader>
-      {tasksPriority &&
-        tasksPriority.slice(0, 5).map((item, index) => (
+      {tasks &&
+        tasks.slice(0, 5).map((item, index) => (
           <TableBody key={index}>
             <TableRow>
               <TableCell className="font-base text-black dark:text-white w-[100px]">

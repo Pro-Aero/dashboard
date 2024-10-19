@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 
-import DialogStatus from "./dialog-filter-status";
+import DialogStatus from "./DialogStatus";
 import { ListFilter } from "lucide-react";
 import { useState } from "react";
 import {

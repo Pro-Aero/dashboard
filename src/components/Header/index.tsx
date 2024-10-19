@@ -3,9 +3,9 @@ import Image from "next/image";
 
 import ProaeroIcon from "@/assets/logo.png";
 
-import { ProfileButton } from "./profile-button";
-import { ThemeSwitcher } from "./theme/theme-switcher";
-import { Separator } from "./ui/separator";
+import { ProfileButton } from "../ProfileButton";
+import { ThemeSwitcher } from "../Theme/theme-switcher";
+import { Separator } from "../ui/separator";
 import Link from "next/link";
 
 import { auth } from "@/auth";
@@ -36,6 +36,12 @@ export async function Header() {
           className="text-foreground transition-colors hover:text-muted-foreground"
         >
           Minhas tarefas
+        </Link>
+        <Link
+          href="/templates"
+          className="text-foreground transition-colors hover:text-muted-foreground"
+        >
+          Templates
         </Link>
 
         {session?.user && session?.user.role === "admin" ? (

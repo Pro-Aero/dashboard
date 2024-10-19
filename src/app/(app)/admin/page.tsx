@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { AvailabilityEmployee } from "./chart";
-import { GetAllUsers } from "@/services/get-all-users";
+import { AvailabilityEmployee } from "../../../components/HoursDistribution";
+import { GetAllUsers } from "@/services/users";
 
 export default async function Admin() {
   const session = await auth();

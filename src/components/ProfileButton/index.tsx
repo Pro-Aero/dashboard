@@ -2,16 +2,16 @@ import { ChevronDown, LogOut } from "lucide-react";
 
 import { auth } from "@/auth";
 
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { ButtonSignout } from "./sign-out/button-sign-out";
-import { ButtonSync } from "./button-sync";
+} from "../ui/dropdown-menu";
+import { ButtonSignout } from "../SignOut/button-sign-out";
+import { ButtonSync } from "../ButtonSync";
 
 function getInitials(name: string): string {
   const initials = name
