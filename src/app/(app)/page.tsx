@@ -6,10 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { GetTasksPriority } from "@/services/tasks";
 import { Separator } from "@/components/ui/separator";
 import { GetHoursProject } from "@/services/planners";
-import { GetHoursWorkedTeam } from "@/services/tasks";
 import { Component } from "@/components/Charts";
-// import TeamTimelineChart from "./chart";
-import Timeline from "@/components/TimeLine";
 
 export default async function Home() {
   const session = await auth();
@@ -20,7 +17,6 @@ export default async function Home() {
 
   const tasksPriority = await GetTasksPriority();
   const hoursProjects = await GetHoursProject();
-  const data = await GetHoursWorkedTeam();
 
   return (
     <div className="flex-col flex-1 items-start gap-4 p-4 sm:py-0 ">
@@ -37,8 +33,6 @@ export default async function Home() {
           <TableTasks tasks={tasksPriority} />
         </CardContent>
       </Card>
-
-      <Timeline teamData={data} />
 
       <Card className="rounded-3xl mt-10 mb-10">
         <CardHeader>
