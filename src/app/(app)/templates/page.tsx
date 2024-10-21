@@ -32,6 +32,8 @@ export default async function Templates({ data }: Props ) {
           <TemplateCard key={index} template={mockdata}></TemplateCard>
         ))}
 
+      <div className="mx-auto max-w-[1200px] grid grid-cols-4 gap-14 mt-10">
+        </div>
       </div>
     </div>
   );
