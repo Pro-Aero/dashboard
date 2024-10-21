@@ -14,7 +14,7 @@ import {
   ChartContainer,
   ChartTooltip,
 } from "@/components/ui/chart";
-import { hoursProjectsProps } from "@/@types";
+import { PlannerResponse } from "@/services/planners";
 
 const chartConfig = {
   desktop: {
@@ -23,7 +23,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface Props {
-  hoursProjects: hoursProjectsProps[];
+  hoursProjects: PlannerResponse[];
 }
 
 export function Component({ hoursProjects }: Props) {

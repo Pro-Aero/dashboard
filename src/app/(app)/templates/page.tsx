@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { AddButton } from "@/components/AddButton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Container } from "postcss";
+import { TemplateCard } from "@/components/TemplateCard";
 
 export default async function Templates() {
   const session = await auth();
@@ -14,8 +15,25 @@ export default async function Templates() {
   return (
     <>
       <div className="flex justify-end pt-5">
-        <AddButton/>
+        <AddButton />
+      </div>
 
+      <div className="mx-auto max-w-[1200px] grid grid-cols-4 gap-14 mt-10">
+        <TemplateCard />
+
+        <TemplateCard />
+
+        <TemplateCard />
+
+        <TemplateCard />
+
+        <TemplateCard />
+
+        <TemplateCard />
+
+        <TemplateCard />
+
+        <TemplateCard />
       </div>
     </>
   );
