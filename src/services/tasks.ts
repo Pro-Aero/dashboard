@@ -1,4 +1,5 @@
 import { ApiKey } from "@/utils/constants";
+import { description } from './../components/HoursDistribution/index';
 
 export async function GetStatusTasksById(userId: string) {
     const url = `http://3.219.224.207:3000/users/${userId}/tasks/status`;
@@ -64,6 +65,10 @@ export async function GetHoursWorkedTeam() {
 export interface Assignments {
     id: string;
     name: string;
+  }
+  export interface TasksTemplateResponse{
+    id: string;
+    description: string;
   }
 export interface TasksResponse{
     id: string;

@@ -1,5 +1,5 @@
-import { TasksResponse } from "./tasks";
+import { TasksTemplateResponse } from "./tasks";
 export interface TemplateResponse {
-    name: string;
-    tasks: TasksResponse[];
+    title: string;
+    tasks: TasksTemplateResponse[];
 }
