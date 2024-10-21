@@ -1,8 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { AddButton } from "@/components/AddButton";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Container } from "postcss";
 import { TemplateCard } from "@/components/TemplateCard";
 
 export default async function Templates() {
