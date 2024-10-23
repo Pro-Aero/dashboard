@@ -7,6 +7,8 @@ const adminEmails = [
   "marcelo.araujo@proaero.aero",
   "vladimir.brandi@proaero.aero",
   "joao.priante@proaero.aero",
+  "pedro@flyaxis.aero",
+  "rodrigo@flyaxis.aero",
 ];
 
 const config: NextAuthConfig = {

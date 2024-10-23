@@ -1,11 +1,19 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { AvailabilityEmployee } from "../../../components/HoursDistribution";
 import { GetAllUsers } from "@/services/users";
 import Timeline from "@/components/TimeLine";
-import { GetHoursWorkedTeam } from "@/services/tasks";
+import { GetHoursWorkedTeam, GetHoursWorkedUsers } from "@/services/tasks";
+import { TeamGanttChart } from "@/components/Gant";
 
-export default async function Admin() {
+interface Props {
+  searchParams: {
+    userId: string;
+  };
+}
+
+export default async function Admin({ searchParams }: Props) {
+  const userId = searchParams.userId;
+
   const session = await auth();
   const data = await GetHoursWorkedTeam();
   if (!session || Date.now() >= new Date(session.expires).getTime()) {
@@ -14,12 +22,16 @@ export default async function Admin() {
 
   const listUsers = await GetAllUsers();
 
+  const gantData = await GetHoursWorkedUsers(userId);
+
   return (
     <>
       <div className="px-6 py-2">
         <span className="text-2xl font-semibold">Admin</span>
       </div>
       <Timeline teamData={data} />
+
+      <TeamGanttChart usersList={listUsers} teamData={gantData} />
     </>
   );
 }

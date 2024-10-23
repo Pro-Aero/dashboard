@@ -22,7 +22,6 @@ const WEEKS_TO_SHOW = 52;
 
 const WEEKDAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "L", "T"];
 
-
 interface Props {
   teamData: TimeLineResponse[];
 }
@@ -171,9 +170,9 @@ export default function Timeline({ teamData }: Props) {
                           </TooltipTrigger>
                           <TooltipContent>
                             {tasks.map((task, taskIndex) => (
-                              <div key={taskIndex}>
+                              <div key={taskIndex} className="flex flex-col">
                                 <strong>
-                                  {task ? task.title : "Tarefa..."}
+                                  Título: {task ? task.title : "Tarefa..."}
                                 </strong>
                                 :{" "}
                                 {task.status === "NotStarted"

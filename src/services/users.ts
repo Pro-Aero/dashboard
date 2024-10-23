@@ -10,16 +10,15 @@ export async function GetAllUsers() {
     },
   });
 
-  const data = await response.json();
+  const data: UserResponse[] = await response.json();
   return data;
 }
 
-
 export interface UserResponse {
-    id: string;
-    displayName: string;
-    userPrincipalName: string;
-    mail: string;
-    jobtitle: string;
-    busyHours: number;
+  id: string;
+  displayName: string;
+  userPrincipalName: string;
+  mail: string;
+  jobtitle: string;
+  busyHours: number;
 }
