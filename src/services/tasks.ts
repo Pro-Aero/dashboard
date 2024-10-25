@@ -1,7 +1,7 @@
-import { ApiKey } from "@/utils/constants";
+import { ApiKey, ApiURL } from "@/utils/constants";
 
 export async function GetStatusTasksById(userId: string) {
-  const url = `http://3.219.224.207:3000/users/${userId}/tasks/status`;
+  const url = `${ApiURL}/users/${userId}/tasks/status`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -15,8 +15,7 @@ export async function GetStatusTasksById(userId: string) {
 }
 
 export async function GetTasksPriority() {
-  const teste = "http://3.219.224.207:3000";
-  const url = `${teste}/tasks/priority`;
+  const url = `${ApiURL}/tasks/priority`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -30,8 +29,7 @@ export async function GetTasksPriority() {
 }
 
 export async function GetTasksById(userId: string) {
-  const teste = "http://3.219.224.207:3000";
-  const url = `${teste}/users/${userId}/tasks?page=1&itemsPerPage=15`;
+  const url = `${ApiURL}/users/${userId}/tasks?page=1&itemsPerPage=15`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -45,8 +43,7 @@ export async function GetTasksById(userId: string) {
 }
 
 export async function GetHoursWorkedTeam() {
-  const teste = "http://3.219.224.207:3000";
-  const url = `${teste}/graphs/team/availability
+  const url = `${ApiURL}/graphs/team/availability
     `;
   const response = await fetch(url, {
     method: "GET",
@@ -61,8 +58,7 @@ export async function GetHoursWorkedTeam() {
 }
 
 export async function GetHoursWorkedUsers(userId: string) {
-  const teste = "http://3.219.224.207:3000";
-  const url = `${teste}/graphs/tasks/user/${userId}
+  const url = `${ApiURL}/graphs/tasks/user/${userId}
     `;
   const response = await fetch(url, {
     method: "GET",
@@ -81,8 +77,9 @@ export interface Assignments {
   name: string;
 }
 export interface TasksTemplateResponse {
-  id: string;
-  description: string;
+  title: string;
+  priority: number;
+  hours: number;
 }
 export interface TasksResponse {
   id: string;

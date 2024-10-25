@@ -17,9 +17,9 @@ import {
 } from "@/components/ui/tooltip";
 import { TasksHoursResponse } from "@/services/tasks";
 import { TimeLineResponse } from "@/services/tasks";
+
 const DAYS_IN_WEEK = 7;
 const WEEKS_TO_SHOW = 52;
-
 const WEEKDAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "L", "T"];
 
 interface Props {
@@ -30,22 +30,22 @@ export default function Timeline({ teamData }: Props) {
   const [startDate, setStartDate] = useState(new Date());
 
   useEffect(() => {
-    let earliestDate = new Date();
-    teamData.forEach((member) => {
-      Object.keys(member.tasksPerDays).forEach((dateString) => {
-        const date = new Date(dateString);
-        if (date < earliestDate) {
-          earliestDate = date;
-        }
-      });
-    });
+    // Set the start date to the first day of the current month
+    const currentDate = new Date();
+    const firstDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
 
-    const adjustedDate = new Date(earliestDate);
+    // Adjust to the previous Monday if the first day is not a Monday
+    const adjustedDate = new Date(firstDayOfMonth);
     adjustedDate.setDate(
       adjustedDate.getDate() - ((adjustedDate.getDay() + 6) % 7)
     );
+
     setStartDate(adjustedDate);
-  }, [teamData]);
+  }, []);
 
   const generateDates = () => {
     const dates = [];
@@ -90,7 +90,7 @@ export default function Timeline({ teamData }: Props) {
     if (!member) return { hours: 0, tasks: [] };
 
     const adjustedDate = new Date(date);
-    adjustedDate.setDate(adjustedDate.getDate() - 1);
+    adjustedDate.setDate(adjustedDate.getDate());
 
     const dateString = adjustedDate.toISOString().split("T")[0];
     const dayData = member.tasksPerDays[dateString];

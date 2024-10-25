@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Pencil, Plus, Trash2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,25 +22,29 @@ import { Input } from "@/components/ui/input";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { z } from "zod";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ActionCreateTemplate } from "./actions";
+import { ActionEditTemplate } from "./actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { FormDataTemplateSchema } from "./schema";
+import { TemplateResponse } from "@/services/templates";
+import { FormDataTemplateSchemaEdit } from "./schema";
 
-type Inputs = z.infer<typeof FormDataTemplateSchema>;
+type Inputs = z.infer<typeof FormDataTemplateSchemaEdit>;
 
-export function ModalCreateTemplate() {
+interface Props {
+  templateData: TemplateResponse;
+}
+
+export function ModalEditTemplate({ templateData }: Props) {
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<Inputs>({
-    resolver: zodResolver(FormDataTemplateSchema),
+    resolver: zodResolver(FormDataTemplateSchemaEdit),
     defaultValues: {
-      nameTemplate: "",
-      tasks: [{ title: "", hours: 0, priority: 0 }],
+      nameTemplate: templateData.title,
+      tasks: templateData.tasks,
     },
   });
 
@@ -54,16 +58,14 @@ export function ModalCreateTemplate() {
   const [expandedTasks, setExpandedTasks] = React.useState<boolean[]>([true]);
   const [open, setOpen] = React.useState(false);
 
-  const tasks = watch("tasks");
-
   const onSubmit = async (data: Inputs) => {
-    const res = await ActionCreateTemplate(data);
+    const res = await ActionEditTemplate(data);
 
     if (res) {
-      toast.success("Template criado com sucesso!");
+      toast.success("Template editado com sucesso!");
       refresh();
     } else {
-      toast.error("Não foi possível criar esse template.");
+      toast.error("Não foi possível editar esse template.");
     }
 
     setOpen(false);
@@ -80,20 +82,23 @@ export function ModalCreateTemplate() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="border-0 text-white hover:text-white hover:border-0 bg-[#044AB8] hover:bg-[#0449b8bd] px-10 rounded-2xl text"
-        >
-          <Plus className="mr-2 size-4" strokeWidth={4} />
-          Criar Template
+        <Button size="sm" variant="ghost" className="gap-2">
+          <Pencil className="mr-2 size-4" strokeWidth={3} />
+          Editar
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Criação de template</DialogTitle>
+          <DialogTitle className="text-2xl">Edição de template</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid gap-2">
+            <Input
+              id="templateId"
+              value={templateData.id}
+              className="hidden"
+              {...register("templateId")}
+            />
             <label
               htmlFor="nameTemplate"
               className="text-sm font-medium text-gray-700"
@@ -127,13 +132,6 @@ export function ModalCreateTemplate() {
                 Adicionar
               </Button>
             </div>
-
-            {tasks.length === 0 && (
-              <p className="text-sm text-red-500">
-                Pelo menos uma tarefa é obrigatória
-              </p>
-            )}
-
             <ScrollArea className="h-[300px] w-full rounded-md p-4">
               <div className="space-y-4">
                 {fields.map((field, index) => (
@@ -206,10 +204,10 @@ export function ModalCreateTemplate() {
                                   field.onChange(
                                     e.target.value
                                       ? parseInt(e.target.value, 10)
-                                      : 0
+                                      : undefined
                                   )
                                 }
-                                value={field.value === 0 ? "" : field.value}
+                                value={field.value ?? ""}
                               />
                             )}
                           />
@@ -232,13 +230,11 @@ export function ModalCreateTemplate() {
                             render={({ field }) => (
                               <Select
                                 onValueChange={(value) =>
-                                  field.onChange(parseInt(value, 10))
+                                  field.onChange(
+                                    value ? parseInt(value, 10) : undefined
+                                  )
                                 }
-                                value={
-                                  field.value === 0
-                                    ? undefined
-                                    : field.value.toString()
-                                }
+                                value={field.value?.toString()}
                               >
                                 <SelectTrigger className="w-full">
                                   <SelectValue placeholder="Selecione a prioridade" />
@@ -269,7 +265,7 @@ export function ModalCreateTemplate() {
             type="submit"
             className="w-full text-lg text-white hover:text-white hover:border-0 rounded-lg bg-[#044AB8] hover:bg-[#0449b8bd]"
           >
-            Cadastrar Templates
+            Editar Templates
           </Button>
         </form>
       </DialogContent>

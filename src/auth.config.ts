@@ -1,6 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
-import { ApiKeyServer } from "./utils/constants";
+import { ApiKeyServer, ApiURL } from "./utils/constants";
 
 const adminEmails = [
   "maria.gabriela@proaero.aero",
@@ -36,16 +36,13 @@ const config: NextAuthConfig = {
     },
     jwt: async ({ token, account, user }: any) => {
       if (token) {
-        const res = await fetch(
-          `http://3.219.224.207:3000/users?mail=${token.email}`,
-          {
-            method: "GET",
-            headers: {
-              "x-api-key": `${ApiKeyServer}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const res = await fetch(`${ApiURL}/users?mail=${token.email}`, {
+          method: "GET",
+          headers: {
+            "x-api-key": `${ApiKeyServer}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         const data = await res.json();
 

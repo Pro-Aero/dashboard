@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const FormDataTemplateSchema = z.object({
+export const FormDataTemplateSchemaEdit = z.object({
+  templateId: z.string(),
   nameTemplate: z.string().min(1, "Nome do template é obrigatório"),
   tasks: z.array(
     z.object({

@@ -100,6 +100,17 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
   );
   const [error, setError] = useState<string | null>(null);
 
+  const startDate = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    return new Date(currentYear, 9, 1);
+  }, []);
+
+  const endDate = useMemo(() => {
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + 6);
+    return endDate;
+  }, [startDate]);
+
   useEffect(() => {
     if (!teamData || !usersList) {
       setError("Dados não disponíveis. Por favor, tente novamente mais tarde.");
@@ -107,23 +118,30 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
     }
 
     if (teamData.tasks.length === 0 || usersList.length === 0) {
-      setError("Nenhum dado de equipe ou usuário disponível.");
+      setError("Usuário sem task cadastradas.");
       return;
     }
 
     setError(null);
 
-    const processedData: DataPoint[] = teamData.tasks.flatMap((task) =>
-      Object.entries(task.taskPerDay).map(([date, dayData]) => ({
-        x: new Date(date).valueOf(),
-        y: 0.5,
-        date,
-        taskInfo: task.taskInfo,
-        taskPerDay: dayData,
-        isWeekend: dayData.isWeekend,
-        userName: task.taskInfo.assignments[0]?.name || "Unknown User",
-      }))
-    );
+    const processedData: DataPoint[] = teamData.tasks
+      .filter((task) => task.taskInfo.status !== "Completed")
+      .flatMap((task) =>
+        Object.entries(task.taskPerDay)
+          .filter(([date]) => {
+            const taskDate = new Date(date);
+            return taskDate >= startDate && taskDate < endDate;
+          })
+          .map(([date, dayData]) => ({
+            x: new Date(date).valueOf(),
+            y: 0.5,
+            date,
+            taskInfo: task.taskInfo,
+            taskPerDay: dayData,
+            isWeekend: dayData.isWeekend,
+            userName: task.taskInfo.assignments[0]?.name || "Unknown User",
+          }))
+      );
 
     const userTaskMap = new Map<string, number>();
     processedData.forEach((dataPoint) => {
@@ -134,7 +152,7 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
     });
 
     setChartData(processedData);
-  }, [teamData, usersList]);
+  }, [teamData, usersList, startDate, endDate]);
 
   const filteredChartData = useMemo(() => {
     if (chartData.length === 0) return [];
@@ -155,15 +173,12 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
   }, [chartData, selectedUser]);
 
   const xDomain = useMemo(() => {
-    const currentYear = new Date().getFullYear();
-    const startOfYear = new Date(currentYear, 0, 1).valueOf();
-    const endOfYear = new Date(currentYear, 11, 31).valueOf();
-    return [startOfYear, endOfYear];
-  }, []);
+    return [startDate.valueOf(), endDate.valueOf()];
+  }, [startDate, endDate]);
 
   const yDomain = useMemo(() => {
     if (filteredChartData.length === 0) return [0, 1];
-    if (selectedUser !== "all") {
+    if (selectedUser !== "") {
       return [0, Math.max(filteredChartData.length * 0.5, 1)];
     }
     const uniqueUsers: string[] = [];
@@ -196,10 +211,9 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
   };
 
   const handleUserChange = (value: string) => {
-    console.log(value);
     setSelectedUser(value);
     const params = new URLSearchParams(searchParams.toString());
-    if (value === "all") {
+    if (value === "") {
       params.delete("userId");
     } else {
       const selectedUserData = usersList?.find(
@@ -213,10 +227,10 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full mt-6">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-primary">
-          Timeline do Time
+          Gantt personalizado do Time
         </CardTitle>
         <CardDescription className="text-muted-foreground">
           {selectedUser === ""
@@ -240,9 +254,9 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
           </Select>
         </div>
         {error ? (
-          <Alert variant="destructive">
+          <Alert>
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Erro</AlertTitle>
+            <AlertTitle>Aviso</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         ) : (
@@ -260,8 +274,12 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
                     domain={xDomain}
                     tickFormatter={formatXAxis}
                     stroke="hsl(var(--primary))"
-                    ticks={Array.from({ length: 12 }, (_, i) =>
-                      new Date(new Date().getFullYear(), i, 1).valueOf()
+                    ticks={Array.from({ length: 6 }, (_, i) =>
+                      new Date(
+                        startDate.getFullYear(),
+                        startDate.getMonth() + i,
+                        1
+                      ).valueOf()
                     )}
                   />
                   <YAxis
@@ -293,7 +311,7 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
 const CustomShape = (props: any) => {
   const { cx, cy, payload } = props;
   const barHeight = 22;
-  const barWidth = 25;
+  const barWidth = 80;
 
   const color = stringToColor(payload.userName);
 
@@ -329,14 +347,12 @@ const CustomTooltip = ({ active, payload }: any) => {
           }) => (
             <div key={task.taskId} className="mb-2">
               <p className="font-semibold text-primary">{task.title}</p>
-              <p className="text-muted-foreground">Horas: {task.hours}</p>
+              <p className="text-muted-foreground">
+                Horas: {task.hours ? task.hours : 0}
+              </p>
               <p className="text-muted-foreground">
                 Status:{" "}
-                {task.status === "Completed"
-                  ? "Completo"
-                  : task.status === "notStarted"
-                  ? "Não iniciado"
-                  : "Em andamento"}
+                {task.status === "notStarted" ? "Não iniciado" : "Em andamento"}
               </p>
             </div>
           )

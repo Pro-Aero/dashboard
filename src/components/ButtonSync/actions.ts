@@ -1,9 +1,9 @@
 "use server";
 
-import { ApiKey } from "@/utils/constants";
+import { ApiKey, ApiURL } from "@/utils/constants";
 
 export const sync = async () => {
-  const res = await fetch(`http://34.238.193.94:3000/sync`, {
+  const res = await fetch(`${ApiURL}/sync`, {
     method: "post",
     headers: {
       "x-api-key": `${ApiKey}`,

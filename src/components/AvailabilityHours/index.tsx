@@ -40,7 +40,6 @@ export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
       valor: weeklyAvailability.hoursOccupied,
       fill: chartConfig.cinza.color,
     },
-
     {
       categoria: "Horas ocioso",
       label: "Ocioso",
@@ -48,7 +47,15 @@ export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
       fill: chartConfig.azul.color,
     },
   ];
+
   const totalValue = chartData.reduce((sum, item) => sum + item.valor, 0);
+
+  // Function to calculate and format percentage
+  const calculatePercentage = (value: number) => {
+    const percentage = (value / totalValue) * 100;
+    return Math.max(0, Math.min(percentage, 100)).toFixed(1);
+  };
+
   return (
     <Card className="flex flex-col h-[450px]">
       <CardHeader className="items-center pb-0">
@@ -83,7 +90,7 @@ export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
               ></div>
               <span className="capitalize">{item.categoria}:</span>
               <span className="font-bold">
-                {Math.round((item.valor / totalValue) * 100).toFixed(1)}%
+                {calculatePercentage(item.valor)}%
               </span>
             </div>
           ))}

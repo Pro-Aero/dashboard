@@ -24,9 +24,6 @@ export function TableTasksById({ tasks }: Props) {
             Nome
           </TableHead>
           <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
-            Especificações
-          </TableHead>
-          <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
             Horas
           </TableHead>
           <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
@@ -48,13 +45,7 @@ export function TableTasksById({ tasks }: Props) {
           <TableBody key={index}>
             <TableRow>
               <TableCell className="font-base text-black dark:text-white text-left p-2">
-                {item.title
-                  .split("-")[0]
-                  .trim()}
-              </TableCell>
-
-              <TableCell className="font-base text-black dark:text-white text-left p-2">
-                {item.title.split("-")[1]?.trim() || ""}
+                {item.title.split("-")[0].trim()}
               </TableCell>
 
               <TableCell className="font-base text-black dark:text-white text-left p-2">
@@ -77,7 +68,7 @@ export function TableTasksById({ tasks }: Props) {
                   : item.priority === 3
                   ? "Importante"
                   : item.priority === 5
-                  ? "Alta"
+                  ? "Media"
                   : "Baixa "}
               </TableCell>
 

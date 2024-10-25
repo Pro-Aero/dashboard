@@ -22,3 +22,6 @@ export const ApiKeyServer: string =
   process.env.NEXTAUTH_API_SERVER !== undefined
     ? process.env.NEXTAUTH_API_SERVER
     : "";
+
+export const ApiURL: string =
+  process.env.NEXTAPI_URL !== undefined ? process.env.NEXTAPI_URL : "";
