@@ -39,6 +39,7 @@ export function ModalEditTemplate({ templateData }: Props) {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Inputs>({
     resolver: zodResolver(FormDataTemplateSchemaEdit),
@@ -48,7 +49,7 @@ export function ModalEditTemplate({ templateData }: Props) {
     },
   });
 
-  const { refresh } = useRouter();
+  const { refresh, replace } = useRouter();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -67,8 +68,9 @@ export function ModalEditTemplate({ templateData }: Props) {
     } else {
       toast.error("Não foi possível editar esse template.");
     }
-
     setOpen(false);
+    reset();
+    refresh();
   };
 
   const toggleTaskExpansion = (index: number) => {
@@ -122,7 +124,7 @@ export function ModalEditTemplate({ templateData }: Props) {
               <Button
                 type="button"
                 onClick={() => {
-                  append({ title: "", hours: 0, priority: 0 });
+                  append({ title: "", hours: 0, priority: 5 });
                   setExpandedTasks((prev) => [...prev, true]);
                 }}
                 size="sm"
@@ -204,7 +206,7 @@ export function ModalEditTemplate({ templateData }: Props) {
                                   field.onChange(
                                     e.target.value
                                       ? parseInt(e.target.value, 10)
-                                      : undefined
+                                      : 0
                                   )
                                 }
                                 value={field.value ?? ""}

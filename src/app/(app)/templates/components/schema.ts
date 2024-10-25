@@ -5,7 +5,7 @@ export const FormDataTemplateSchema = z.object({
   tasks: z.array(
     z.object({
       title: z.string().min(1, "Título é obrigatório"),
-      hours: z.number().min(1, "Horas são obrigatórias"),
+      hours: z.number(),
       priority: z.number().min(1, "Prioridade é obrigatória"),
     })
   ),

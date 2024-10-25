@@ -40,7 +40,7 @@ export function ModalCreateTemplate() {
     resolver: zodResolver(FormDataTemplateSchema),
     defaultValues: {
       nameTemplate: "",
-      tasks: [{ title: "", hours: 0, priority: 0 }],
+      tasks: [{ title: "", hours: 0, priority: 5 }],
     },
   });
 
@@ -117,7 +117,7 @@ export function ModalCreateTemplate() {
               <Button
                 type="button"
                 onClick={() => {
-                  append({ title: "", hours: 0, priority: 0 });
+                  append({ title: "", hours: 0, priority: 5 });
                   setExpandedTasks((prev) => [...prev, true]);
                 }}
                 size="sm"
@@ -209,7 +209,7 @@ export function ModalCreateTemplate() {
                                       : 0
                                   )
                                 }
-                                value={field.value === 0 ? "" : field.value}
+                                value={field.value}
                               />
                             )}
                           />
