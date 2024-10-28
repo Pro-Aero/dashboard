@@ -16,6 +16,8 @@ interface Props {
 }
 
 export function TableTasksById({ tasks }: Props) {
+  const filteredTasks = tasks.filter((task) => task.status !== "Completed");
+
   return (
     <Table>
       <TableHeader>
@@ -40,10 +42,10 @@ export function TableTasksById({ tasks }: Props) {
           </TableHead>
         </TableRow>
       </TableHeader>
-      {tasks.length > 0 ? (
-        tasks.map((item, index) => (
-          <TableBody key={index}>
-            <TableRow>
+      {filteredTasks.length > 0 ? (
+        <TableBody>
+          {filteredTasks.map((item, index) => (
+            <TableRow key={index}>
               <TableCell className="font-base text-black dark:text-white text-left p-2">
                 {item.title.split("-")[0].trim()}
               </TableCell>
@@ -79,28 +81,27 @@ export function TableTasksById({ tasks }: Props) {
                       ? "bg-red-800 hover:bg-red-800"
                       : item.status === null || item.status === ""
                       ? "bg-zinc-800 hover:bg-zinc-800"
-                      : item.status === "InProgress"
-                      ? "bg-review hover:bg-review"
-                      : "bg-success hover:bg-success"
+                      : "bg-review hover:bg-review"
                   } text-white text-xs font-semibold`}
                 >
                   {item.status === "Overdue"
                     ? "Atrasado"
                     : item.status === null || item.status === ""
                     ? "Não iniciado"
-                    : item.status === "InProgress"
-                    ? "Em progresso"
-                    : "Concluído"}
+                    : "Em progresso"}
                 </Badge>
               </TableCell>
             </TableRow>
-          </TableBody>
-        ))
+          ))}
+        </TableBody>
       ) : (
         <TableBody>
           <TableRow>
-            <TableCell className="font-base text-base text-black dark:text-white p-2">
-              Não há tarefas.
+            <TableCell
+              colSpan={6}
+              className="font-base text-base text-black dark:text-white p-2 text-center"
+            >
+              Não há tarefas não concluídas.
             </TableCell>
           </TableRow>
         </TableBody>

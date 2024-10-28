@@ -33,17 +33,21 @@ interface Props {
 }
 
 export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
+  // Ensure non-negative values for chart data
+  const hoursOccupied = Math.max(0, weeklyAvailability.hoursOccupied);
+  const hoursRemaining = Math.max(0, weeklyAvailability.hoursRemaining);
+
   const chartData = [
     {
       categoria: "Horas ocupado",
       label: "Ocupado",
-      valor: weeklyAvailability.hoursOccupied,
+      valor: hoursOccupied,
       fill: chartConfig.cinza.color,
     },
     {
       categoria: "Horas ocioso",
       label: "Ocioso",
-      valor: weeklyAvailability.hoursRemaining,
+      valor: hoursRemaining,
       fill: chartConfig.azul.color,
     },
   ];
@@ -52,6 +56,7 @@ export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
 
   // Function to calculate and format percentage
   const calculatePercentage = (value: number) => {
+    if (totalValue === 0) return "0.0";
     const percentage = (value / totalValue) * 100;
     return Math.max(0, Math.min(percentage, 100)).toFixed(1);
   };
