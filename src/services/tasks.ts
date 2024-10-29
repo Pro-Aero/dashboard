@@ -29,7 +29,7 @@ export async function GetTasksPriority() {
 }
 
 export async function GetTasksById(userId: string) {
-  const url = `${ApiURL}/users/${userId}/tasks?page=1&itemsPerPage=15`;
+  const url = `${ApiURL}/users/${userId}/tasks?page=1&itemsPerPage=1000`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
