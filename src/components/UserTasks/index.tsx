@@ -47,7 +47,7 @@ export function TableTasksById({ tasks }: Props) {
           {filteredTasks.map((item, index) => (
             <TableRow key={index}>
               <TableCell className="font-base text-black dark:text-white text-left p-2">
-                {item.title.split("-")[0].trim()}
+                {item.title.split("{")[0].trim()}
               </TableCell>
 
               <TableCell className="font-base text-black dark:text-white text-left p-2">

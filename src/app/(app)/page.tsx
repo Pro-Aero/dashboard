@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { GetTasksPriority } from "@/services/tasks";
 import { Separator } from "@/components/ui/separator";
 import { GetHoursProject } from "@/services/planners";
-import { Component } from "@/components/Charts";
+import { Chart } from "@/components/Charts";
 
 export default async function Home() {
   const session = await auth();
@@ -47,7 +47,7 @@ export default async function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Component hoursProjects={hoursProjects} />
+          <Chart hoursProjects={hoursProjects} />
         </CardContent>
       </Card>
     </div>

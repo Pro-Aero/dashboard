@@ -25,10 +25,6 @@ export function TableTasks({ tasks }: Props) {
           </TableHead>
 
           <TableHead className="font-semibold text-base text-black dark:text-white">
-            Especificações
-          </TableHead>
-
-          <TableHead className="font-semibold text-base text-black dark:text-white">
             Horas
           </TableHead>
 
@@ -58,14 +54,10 @@ export function TableTasks({ tasks }: Props) {
                   {
                     item.title
                       .replace(/\([^)]*\)/g, "") // Remove tudo que está entre parênteses
-                      .split("-")[0] // Divide a string pelo "-"
+                      .split("{")[0] // Divide a string pelo "-"
                       .trim() // Remove espaços em branco extras
                   }
                 </div>
-              </TableCell>
-
-              <TableCell className="font-base text-black dark:text-white text-center">
-                {item.title.split("-")[1]?.trim() || ""}
               </TableCell>
 
               <TableCell className="font-base text-black text-center dark:text-white">
