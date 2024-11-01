@@ -29,18 +29,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { UserResponse } from "@/services/users";
+import { PlannerResponse } from "@/services/planners";
+import { ActionExecuteTemplate } from "./actions";
 
 interface Props {
   templateData: TemplateResponse;
   users: UserResponse[];
+  planners: PlannerResponse[];
 }
 
-const plans = ["Plano A", "Plano B", "Plano C"];
-
-export function ModalExecuteTemplate({ templateData, users }: Props) {
-  const { control, register } = useForm({
+export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
+  const { control, handleSubmit } = useForm({
     defaultValues: {
       plan: "",
+      templateId: templateData.id,
       tasks: templateData.tasks.map((task) => ({
         ...task,
         responsibleId: "",
@@ -56,9 +58,34 @@ export function ModalExecuteTemplate({ templateData, users }: Props) {
   const [open, setOpen] = React.useState(false);
 
   const onSubmit = async (data: any) => {
-    // Implement submission logic when API is ready
-    console.log(data);
-    toast.success("Template executado com sucesso!");
+    const assignments = data.tasks.reduce(
+      (acc: Record<string, string>, task: any) => {
+        if (task.responsibleId) {
+          acc[task.id] = task.responsibleId;
+        }
+        return acc;
+      },
+      {}
+    );
+
+    const requestData = {
+      assignments,
+      templateId: data.templateId,
+      plan: data.plan,
+    };
+
+    const res = await ActionExecuteTemplate(requestData);
+
+    console.log(res);
+
+    if (res) {
+      toast.success("Template executado com sucesso!");
+    } else {
+      toast.error(
+        "O template não foi executado com sucesso! Por favor, tente novamente mais tarde."
+      );
+    }
+
     setOpen(false);
   };
 
@@ -75,7 +102,7 @@ export function ModalExecuteTemplate({ templateData, users }: Props) {
             Template - {templateData.title}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="flex flex-col items-center space-y-2">
             <label
               htmlFor="plan"
@@ -92,9 +119,9 @@ export function ModalExecuteTemplate({ templateData, users }: Props) {
                     <SelectValue placeholder="Selecionar plano" />
                   </SelectTrigger>
                   <SelectContent>
-                    {plans.map((plan) => (
-                      <SelectItem key={plan} value={plan}>
-                        {plan}
+                    {planners.map((plan) => (
+                      <SelectItem key={plan.id} value={plan.id}>
+                        {plan.title}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -137,8 +164,8 @@ export function ModalExecuteTemplate({ templateData, users }: Props) {
                         : item.priority === 3
                         ? "Importante"
                         : item.priority === 5
-                        ? "Alta"
-                        : "Média"}
+                        ? "Media"
+                        : "Baixa"}
                     </TableCell>
                     <TableCell>
                       <Controller

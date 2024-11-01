@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-export const FormDataTemplateSchemaEdit = z.object({
+export const FormDataTemplateSchemaExecute = z.object({
+  assignments: z.record(z.string(), z.string()),
   templateId: z.string(),
-  plannerId: z.string(),
+  plan: z.string(),
 });
+
+// Inferred type from the schema
+type FormDataTemplateExecute = z.infer<typeof FormDataTemplateSchemaExecute>;

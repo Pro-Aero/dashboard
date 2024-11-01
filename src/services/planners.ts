@@ -1,6 +1,6 @@
 import { ApiKey, ApiURL } from "@/utils/constants";
 
-export async function GetHoursProject() {
+export async function GetAllPlanners() {
   const url = `${ApiURL}/planners`;
   const response = await fetch(url, {
     method: "GET",
@@ -10,7 +10,7 @@ export async function GetHoursProject() {
     },
   });
 
-  const data = await response.json();
+  const data: PlannerResponse[] = await response.json();
   return data;
 }
 
