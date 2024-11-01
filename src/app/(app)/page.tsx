@@ -5,7 +5,7 @@ import { TableTasks } from "../../components/PriorityTasks";
 import { ArrowRight } from "lucide-react";
 import { GetTasksPriority } from "@/services/tasks";
 import { Separator } from "@/components/ui/separator";
-import { GetHoursProject } from "@/services/planners";
+import { GetAllPlanners } from "@/services/planners";
 import { Chart } from "@/components/Charts";
 
 export default async function Home() {
@@ -16,7 +16,7 @@ export default async function Home() {
   }
 
   const tasksPriority = await GetTasksPriority();
-  const hoursProjects = await GetHoursProject();
+  const hoursProjects = await GetAllPlanners();
 
   return (
     <div className="flex-col flex-1 items-start gap-4 p-4 sm:py-0 ">

@@ -76,8 +76,6 @@ export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
 
     const res = await ActionExecuteTemplate(requestData);
 
-    console.log(res);
-
     if (res) {
       toast.success("Template executado com sucesso!");
     } else {
