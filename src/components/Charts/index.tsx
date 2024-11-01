@@ -26,7 +26,7 @@ interface Props {
   hoursProjects: PlannerResponse[];
 }
 
-export function Component({ hoursProjects }: Props) {
+export function Chart({ hoursProjects }: Props) {
   const sortedData = [...hoursProjects]
     .sort((a, b) => b.totalHours - a.totalHours)
     .slice(0, 10);

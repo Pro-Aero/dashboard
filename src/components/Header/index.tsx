@@ -4,10 +4,9 @@ import Image from "next/image";
 import ProaeroIcon from "@/assets/logo.png";
 
 import { ProfileButton } from "../ProfileButton";
-import { ThemeSwitcher } from "../theme/theme-switcher";
+import { ThemeSwitcher } from "../Theme";
 import { Separator } from "../ui/separator";
 import Link from "next/link";
-
 import { auth } from "@/auth";
 
 export async function Header() {
