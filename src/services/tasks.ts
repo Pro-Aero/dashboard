@@ -77,6 +77,7 @@ export interface Assignments {
   name: string;
 }
 export interface TasksTemplateResponse {
+  id: string;
   title: string;
   priority: number;
   hours: number;

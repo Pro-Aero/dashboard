@@ -50,14 +50,10 @@ export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
     },
   });
 
-  const { fields } = useFieldArray({
-    control,
-    name: "tasks",
-  });
-
   const [open, setOpen] = React.useState(false);
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     const assignments = data.tasks.reduce(
       (acc: Record<string, string>, task: any) => {
         if (task.responsibleId) {
@@ -148,8 +144,8 @@ export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {fields.map((item, index) => (
-                  <TableRow key={item.id}>
+                {templateData.tasks.map((item, index) => (
+                  <TableRow key={index}>
                     <TableCell className="text-sm text-gray-700">
                       {item.title}
                     </TableCell>
