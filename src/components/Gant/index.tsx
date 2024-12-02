@@ -29,52 +29,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { UserResponse } from "@/services/users";
-
-interface Assignment {
-  id: string;
-  name: string;
-}
-
-interface Planner {
-  id: string;
-  title: string;
-}
-
-interface TaskInfo {
-  id: string;
-  bucketId: string;
-  title: string;
-  percentComplete: number;
-  priority: number;
-  startDateTime: string;
-  dueDateTime: string;
-  completedDateTime: string | null;
-  hours: number;
-  status: string;
-  planner: Planner;
-  assignments: Assignment[];
-}
-
-interface TaskPerDay {
-  totalHours: number;
-  tasks: {
-    taskId: string;
-    title: string;
-    hours: number;
-    status: string;
-  }[];
-  isWeekend: boolean;
-}
-
-interface Task {
-  taskInfo: TaskInfo;
-  taskPerDay: { [date: string]: TaskPerDay };
-}
-
-interface GanttData {
-  tasks: Task[];
-  totalTasksPerDay: { [date: string]: TaskPerDay };
-}
+import { GanttData, TaskInfo, TaskPerDay } from "@/services/tasks";
 
 type DataPoint = {
   x: number;
@@ -95,9 +50,8 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [chartData, setChartData] = useState<DataPoint[]>([]);
-  const [selectedUser, setSelectedUser] = useState<string>(
-    searchParams.get("userId") || ""
-  );
+  const [selectedUser, setSelectedUser] = useState<string>("");
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const startDate = useMemo(() => {
@@ -152,62 +106,60 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
     });
 
     setChartData(processedData);
-  }, [teamData, usersList, startDate, endDate]);
+
+    const urlUserId = searchParams.get("userId");
+    if (urlUserId) {
+      const user = usersList.find((user) => user.id === urlUserId);
+      if (user) {
+        setSelectedUser(user.displayName);
+      }
+    }
+  }, [teamData, usersList, startDate, endDate, searchParams]);
 
   const filteredChartData = useMemo(() => {
     if (chartData.length === 0) return [];
 
-    const data =
-      selectedUser === ""
-        ? chartData
-        : chartData.filter((data) => data.userName === selectedUser);
+    let data = chartData;
 
     if (selectedUser !== "") {
-      return data.map((item, index) => ({
-        ...item,
-        y: index * 0.5 + 0.5,
-      }));
+      data = data.filter((item) => item.userName === selectedUser);
     }
 
-    return data;
-  }, [chartData, selectedUser]);
+    if (selectedMonth !== "") {
+      const [year, month] = selectedMonth.split("-");
+      data = data.filter((item) => {
+        const itemDate = new Date(item.date);
+        return (
+          itemDate.getFullYear() === parseInt(year) &&
+          itemDate.getMonth() === parseInt(month) - 1
+        );
+      });
+    }
+
+    return data.map((item, index) => ({
+      ...item,
+      y: index * 0.5 + 0.5,
+    }));
+  }, [chartData, selectedUser, selectedMonth]);
 
   const xDomain = useMemo(() => {
+    if (selectedMonth !== "") {
+      const [year, month] = selectedMonth.split("-");
+      const startOfMonth = new Date(parseInt(year), parseInt(month) - 1, 1);
+      const endOfMonth = new Date(parseInt(year), parseInt(month), 0);
+      return [startOfMonth.valueOf(), endOfMonth.valueOf()];
+    }
     return [startDate.valueOf(), endDate.valueOf()];
-  }, [startDate, endDate]);
+  }, [startDate, endDate, selectedMonth]);
 
   const yDomain = useMemo(() => {
     if (filteredChartData.length === 0) return [0, 1];
-    if (selectedUser !== "") {
-      return [0, Math.max(filteredChartData.length * 0.5, 1)];
-    }
-    const uniqueUsers: string[] = [];
-    const userSet: { [key: string]: boolean } = {};
-    filteredChartData.forEach((d) => {
-      if (!userSet[d.userName]) {
-        userSet[d.userName] = true;
-        uniqueUsers.push(d.userName);
-      }
-    });
-    return [-0.5, uniqueUsers.length - 0.5];
-  }, [filteredChartData, selectedUser]);
+    return [0, Math.max(filteredChartData.length * 0.5, 1)];
+  }, [filteredChartData]);
 
   const formatXAxis = (tickItem: number) => {
     const date = new Date(tickItem);
-    return date.toLocaleString("default", { month: "short" });
-  };
-
-  const formatYAxis = (tickItem: number) => {
-    if (selectedUser !== "") return "";
-    const uniqueUsers: string[] = [];
-    const userSet: { [key: string]: boolean } = {};
-    filteredChartData.forEach((d) => {
-      if (!userSet[d.userName]) {
-        userSet[d.userName] = true;
-        uniqueUsers.push(d.userName);
-      }
-    });
-    return uniqueUsers[tickItem] || "";
+    return date.toLocaleString("default", { month: "short", day: "numeric" });
   };
 
   const handleUserChange = (value: string) => {
@@ -226,6 +178,28 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
+  const handleMonthChange = (value: string) => {
+    setSelectedMonth(value);
+  };
+
+  const months = useMemo(() => {
+    const monthsArray = [];
+    let currentDate = new Date(startDate);
+    while (currentDate < endDate) {
+      monthsArray.push({
+        value: `${currentDate.getFullYear()}-${String(
+          currentDate.getMonth() + 1
+        ).padStart(2, "0")}`,
+        label: currentDate.toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        }),
+      });
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+    return monthsArray;
+  }, [startDate, endDate]);
+
   return (
     <Card className="w-full mt-6">
       <CardHeader>
@@ -239,7 +213,7 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mb-4">
+        <div className="flex space-x-4 mb-4">
           <Select onValueChange={handleUserChange} value={selectedUser}>
             <SelectTrigger className="w-[280px]">
               <SelectValue placeholder="Selecione um funcionário" />
@@ -248,6 +222,18 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
               {usersList?.map((user) => (
                 <SelectItem key={user.id} value={user.displayName}>
                   {user.displayName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select onValueChange={handleMonthChange} value={selectedMonth}>
+            <SelectTrigger className="w-[280px]">
+              <SelectValue placeholder="Selecione um mês" />
+            </SelectTrigger>
+            <SelectContent>
+              {months.map((month) => (
+                <SelectItem key={month.value} value={month.value}>
+                  {month.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -274,20 +260,23 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
                     domain={xDomain}
                     tickFormatter={formatXAxis}
                     stroke="hsl(var(--primary))"
-                    ticks={Array.from({ length: 6 }, (_, i) =>
-                      new Date(
-                        startDate.getFullYear(),
-                        startDate.getMonth() + i,
-                        1
-                      ).valueOf()
-                    )}
+                    ticks={
+                      selectedMonth
+                        ? undefined
+                        : Array.from({ length: 6 }, (_, i) =>
+                            new Date(
+                              startDate.getFullYear(),
+                              startDate.getMonth() + i,
+                              1
+                            ).valueOf()
+                          )
+                    }
                   />
                   <YAxis
                     type="number"
                     dataKey="y"
                     name="User"
                     domain={yDomain}
-                    tickFormatter={formatYAxis}
                     stroke="hsl(var(--primary))"
                   />
                   <Tooltip content={<CustomTooltip />} />
@@ -310,10 +299,17 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
 
 const CustomShape = (props: any) => {
   const { cx, cy, payload } = props;
-  const barHeight = 22;
-  const barWidth = 80;
+  const data = payload[0].payload;
+  const array = data.taskPerDay.tasks.filter();
 
-  const color = stringToColor(payload.userName);
+  const barHeight = 22;
+  const maxBarWidth = 200; // Largura máxima para a task mais longa
+  const minBarWidth = 40; // Largura mínima para a task mais curta
+  const maxHours = 40; // Assumindo que uma semana de trabalho tem 40 horas
+
+  const barWidth = Math.max(minBarWidth, Math.min(maxBarWidth * maxBarWidth));
+
+  const color = stringToColor(payload.taskInfo.title);
 
   return (
     <g>
@@ -326,6 +322,16 @@ const CustomShape = (props: any) => {
         rx={4}
         ry={4}
       />
+      <text
+        x={cx + 5}
+        y={cy + 5}
+        fill="white"
+        fontSize="12"
+        textAnchor="start"
+        dominantBaseline="middle"
+      >
+        {payload.taskInfo.title} ({payload.totalHours}h)
+      </text>
     </g>
   );
 };
@@ -338,6 +344,9 @@ const CustomTooltip = ({ active, payload }: any) => {
         <p className="font-bold text-lg text-primary mb-2">
           {data.userName} - {new Date(data.date).toLocaleDateString()}
         </p>
+        <p className="font-semibold text-primary mb-2">
+          Task: {data.taskInfo.title}
+        </p>
         {data.taskPerDay.tasks.map(
           (task: {
             taskId: string;
@@ -346,9 +355,8 @@ const CustomTooltip = ({ active, payload }: any) => {
             status: string;
           }) => (
             <div key={task.taskId} className="mb-2">
-              <p className="font-semibold text-primary">{task.title}</p>
               <p className="text-muted-foreground">
-                Horas: {task.hours ? task.hours : 0}
+                Horas neste dia: {task.hours ? task.hours : 0}
               </p>
               <p className="text-muted-foreground">
                 Status:{" "}

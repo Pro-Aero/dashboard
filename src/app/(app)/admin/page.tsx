@@ -4,6 +4,7 @@ import { GetAllUsers } from "@/services/users";
 import Timeline from "@/components/TimeLine";
 import { GetHoursWorkedTeam, GetHoursWorkedUsers } from "@/services/tasks";
 import { TeamGanttChart } from "@/components/Gant";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {
   searchParams: {
@@ -29,9 +30,19 @@ export default async function Admin({ searchParams }: Props) {
       <div className="px-6 py-2">
         <span className="text-2xl font-semibold">Admin</span>
       </div>
-      <Timeline teamData={data} />
+      <Tabs defaultValue="timeline">
+        <TabsList className="grid w-[400px] grid-cols-2">
+          <TabsTrigger value="timeline">Timeline</TabsTrigger>
+          <TabsTrigger value="gantt">Gantt</TabsTrigger>
+        </TabsList>
+        <TabsContent value="timeline">
+          <Timeline teamData={data} />
+        </TabsContent>
 
-      <TeamGanttChart usersList={listUsers} teamData={gantData} />
+        <TabsContent value="gantt">
+          <TeamGanttChart usersList={listUsers} teamData={gantData} />
+        </TabsContent>
+      </Tabs>
     </>
   );
 }

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ChartPriorityTask from "../../../components/PriorityChart";
 import ChartAvailabilityTask from "../../../components/AvailabilityHours";
-import { GetTasksById } from "@/services/tasks";
+import { GetTasksById, GetUserWeekAvailable } from "@/services/tasks";
 import { TableTasksById } from "../../../components/UserTasks";
 import { GetStatusTasksById } from "@/services/tasks";
 import { GetAllUsers } from "@/services/users";
@@ -29,14 +29,11 @@ export default async function Tasks({ searchParams }: Props) {
         : session.user.id
       : session.user.id;
 
-  const tasksByIdData = await GetTasksById(userId as string);
-  const tasks = tasksByIdData.data;
+  const UserWeeks = await GetUserWeekAvailable(userId as string);
+  const taskById = await GetTasksById(userId as string);
 
   const statusTasksData = await GetStatusTasksById(userId as string);
   const tasksSummary = statusTasksData.tasksSummary;
-  const weeklyAvailability = statusTasksData.weeklyAvailability;
-
-  // ------------------
 
   const listUsers = await GetAllUsers();
 
@@ -53,7 +50,7 @@ export default async function Tasks({ searchParams }: Props) {
       <div className="grid grid-cols-2 flex-1 mt-10 items-start gap-4 p-4 sm:py-0 ">
         <ChartPriorityTask tasksSummary={tasksSummary} />
 
-        <ChartAvailabilityTask weeklyAvailability={weeklyAvailability} />
+        <ChartAvailabilityTask weeklyAvailability={UserWeeks} />
 
         <Card className="col-span-2">
           <CardHeader>
@@ -62,7 +59,7 @@ export default async function Tasks({ searchParams }: Props) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <TableTasksById tasks={tasks} />
+            <TableTasksById tasks={taskById} />
           </CardContent>
         </Card>
       </div>

@@ -10,7 +10,23 @@ export async function GetStatusTasksById(userId: string) {
     },
   });
 
+  console.log;
+
   const data = await response.json();
+  return data;
+}
+
+export async function GetUserWeekAvailable(userId: string) {
+  const url = `${ApiURL}/graphs/users/${userId}/availability/week`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "x-api-key": `${ApiKey}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data: GetUserWeekAvailableParams = await response.json();
   return data;
 }
 
@@ -25,6 +41,7 @@ export async function GetTasksPriority() {
   });
 
   const data = await response.json();
+  console.log(data);
   return data;
 }
 
@@ -54,6 +71,7 @@ export async function GetHoursWorkedTeam() {
   });
 
   const data: TimeLineResponse[] = await response.json();
+  console.log(data);
   return data;
 }
 
@@ -70,6 +88,13 @@ export async function GetHoursWorkedUsers(userId: string) {
 
   const data: GanttData = await response.json();
   return data;
+}
+
+export interface GetUserWeekAvailableParams {
+  userName: string;
+  workedHours: number;
+  availableHours: number;
+  maxWorkedHours: number;
 }
 
 export interface Assignments {
@@ -116,12 +141,6 @@ export interface TasksHoursResponse {
   status: string;
 }
 
-export interface WeeklyAvailability {
-  totalAvailableHours: number;
-  hoursOccupied: number;
-  hoursRemaining: number;
-}
-
 export interface TimeLineResponse {
   userId: string;
   userName: string;
@@ -143,6 +162,16 @@ interface Planner {
   title: string;
 }
 
+interface Assignment {
+  id: string;
+  name: string;
+}
+
+interface Planner {
+  id: string;
+  title: string;
+}
+
 export interface TaskInfo {
   id: string;
   bucketId: string;
@@ -155,7 +184,7 @@ export interface TaskInfo {
   hours: number;
   status: string;
   planner: Planner;
-  assignments: Assignments[];
+  assignments: Assignment[];
 }
 
 export interface TaskPerDay {
@@ -174,11 +203,7 @@ export interface Task {
   taskPerDay: { [date: string]: TaskPerDay };
 }
 
-export interface TotalTasksPerDay {
-  [date: string]: TaskPerDay;
-}
-
 export interface GanttData {
   tasks: Task[];
-  totalTasksPerDay: TotalTasksPerDay;
+  totalTasksPerDay: { [date: string]: TaskPerDay };
 }

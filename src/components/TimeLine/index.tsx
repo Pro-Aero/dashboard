@@ -30,7 +30,6 @@ export default function Timeline({ teamData }: Props) {
   const [startDate, setStartDate] = useState(new Date());
 
   useEffect(() => {
-    // Set the start date to the first day of the current month
     const currentDate = new Date();
     const firstDayOfMonth = new Date(
       currentDate.getFullYear(),
@@ -38,7 +37,6 @@ export default function Timeline({ teamData }: Props) {
       1
     );
 
-    // Adjust to the previous Monday if the first day is not a Monday
     const adjustedDate = new Date(firstDayOfMonth);
     adjustedDate.setDate(
       adjustedDate.getDate() - ((adjustedDate.getDay() + 6) % 7)
@@ -100,6 +98,19 @@ export default function Timeline({ teamData }: Props) {
     return { hours: dayData.totalHours, tasks: dayData.tasks };
   };
 
+  const formatName = (name: string) => {
+    const names = name.split(" ");
+    if (names.length === 1) return name;
+
+    const firstName = names[0];
+    const initials = names
+      .slice(1)
+      .map((n) => n[0])
+      .join(".");
+
+    return `${firstName} ${initials}.`;
+  };
+
   return (
     <div className="container mx-auto p-4 overflow-x-auto">
       <TooltipProvider>
@@ -143,7 +154,7 @@ export default function Timeline({ teamData }: Props) {
             {teamData.map((member) => (
               <TableRow key={member.userId}>
                 <TableCell className="sticky left-0 bg-white z-10 font-medium">
-                  {member.userName}
+                  {formatName(member.userName)}
                 </TableCell>
                 {dates.map((date, index) => {
                   const { hours, tasks } = getHoursAndTasks(

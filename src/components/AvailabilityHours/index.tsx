@@ -15,7 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { WeeklyAvailability } from "@/services/tasks";
+import { GetUserWeekAvailableParams } from "@/services/tasks";
 
 const chartConfig = {
   azul: {
@@ -29,13 +29,12 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface Props {
-  weeklyAvailability: WeeklyAvailability;
+  weeklyAvailability: GetUserWeekAvailableParams;
 }
 
 export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
-  // Ensure non-negative values for chart data
-  const hoursOccupied = Math.max(0, weeklyAvailability.hoursOccupied);
-  const hoursRemaining = Math.max(0, weeklyAvailability.hoursRemaining);
+  const hoursOccupied = Math.max(0, weeklyAvailability.workedHours);
+  const hoursRemaining = Math.max(0, weeklyAvailability.availableHours);
 
   const chartData = [
     {
@@ -45,7 +44,7 @@ export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
       fill: chartConfig.cinza.color,
     },
     {
-      categoria: "Horas ocioso",
+      categoria: "Horas disponíveis",
       label: "Ocioso",
       valor: hoursRemaining,
       fill: chartConfig.azul.color,
@@ -54,7 +53,6 @@ export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
 
   const totalValue = chartData.reduce((sum, item) => sum + item.valor, 0);
 
-  // Function to calculate and format percentage
   const calculatePercentage = (value: number) => {
     if (totalValue === 0) return "0.0";
     const percentage = (value / totalValue) * 100;
@@ -64,7 +62,7 @@ export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
   return (
     <Card className="flex flex-col h-[450px]">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Disponibilidade de Horas</CardTitle>
+        <CardTitle>Disponibilidade de horas semanal</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -95,7 +93,7 @@ export default function ChartAvailabilityTask({ weeklyAvailability }: Props) {
               ></div>
               <span className="capitalize">{item.categoria}:</span>
               <span className="font-bold">
-                {calculatePercentage(item.valor)}%
+                {item.valor ? calculatePercentage(item.valor) : 0}%
               </span>
             </div>
           ))}

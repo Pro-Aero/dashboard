@@ -1,6 +1,8 @@
 "use client";
 
 import * as React from "react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import {
   Select,
@@ -12,8 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserResponse } from "@/services/users";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 interface Props {
   listUsers: UserResponse[];
@@ -21,31 +21,43 @@ interface Props {
 }
 
 export function SelectUser({ listUsers, employee }: Props) {
-  const { replace } = useRouter();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedName, setSelectedName] = useState<string>("");
 
-  const handleSelectChange = (selectedValue: string) => {
-    const selectedItem = listUsers.find((item) =>
-      item.id === employee ? employee : selectedValue
-    );
-    setSelectedName(selectedItem?.displayName as string);
-    replace(`?employee=${selectedValue}`);
+  useEffect(() => {
+    const currentEmployee = searchParams.get("employee");
+    if (currentEmployee) {
+      const selectedUser = listUsers.find(
+        (user) => user.id === currentEmployee
+      );
+      if (selectedUser) {
+        setSelectedName(selectedUser.displayName);
+      }
+    }
+  }, [listUsers, searchParams]);
 
-    return;
+  const handleSelectChange = (selectedValue: string) => {
+    const selectedItem = listUsers.find((item) => item.id === selectedValue);
+    if (selectedItem) {
+      setSelectedName(selectedItem.displayName);
+      router.push(`?employee=${selectedValue}`);
+    }
   };
+
   return (
-    <Select onValueChange={handleSelectChange}>
+    <Select onValueChange={handleSelectChange} value={employee}>
       <SelectTrigger className="w-[300px] rounded-md border border-[#788089] gap-1">
-        <SelectValue
-          placeholder={selectedName ? selectedName : "Selecione um funcionário"}
-        />
+        <SelectValue placeholder="Selecione um funcionário">
+          {selectedName || "Selecione um funcionário"}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Funcionário</SelectLabel>
           {listUsers &&
-            listUsers.map((item, index) => (
-              <SelectItem key={index} value={item.id}>
+            listUsers.map((item) => (
+              <SelectItem key={item.id} value={item.id}>
                 {item.displayName}
               </SelectItem>
             ))}

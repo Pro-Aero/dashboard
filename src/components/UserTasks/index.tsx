@@ -16,8 +16,6 @@ interface Props {
 }
 
 export function TableTasksById({ tasks }: Props) {
-  const filteredTasks = tasks.filter((task) => task.status !== "Completed");
-
   return (
     <Table>
       <TableHeader>
@@ -42,9 +40,9 @@ export function TableTasksById({ tasks }: Props) {
           </TableHead>
         </TableRow>
       </TableHeader>
-      {filteredTasks.length > 0 ? (
+      {tasks.length > 0 ? (
         <TableBody>
-          {filteredTasks.map((item, index) => (
+          {tasks.map((item, index) => (
             <TableRow key={index}>
               <TableCell className="font-base text-black dark:text-white text-left p-2">
                 {item.title.split("{")[0].trim()}
@@ -101,7 +99,7 @@ export function TableTasksById({ tasks }: Props) {
               colSpan={6}
               className="font-base text-base text-black dark:text-white p-2 text-center"
             >
-              Não há tarefas não concluídas.
+              Não há tarefas.
             </TableCell>
           </TableRow>
         </TableBody>
