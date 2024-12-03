@@ -10,8 +10,6 @@ export async function GetStatusTasksById(userId: string) {
     },
   });
 
-  console.log;
-
   const data = await response.json();
   return data;
 }
@@ -30,19 +28,39 @@ export async function GetUserWeekAvailable(userId: string) {
   return data;
 }
 
-export async function GetTasksPriority() {
-  const url = `${ApiURL}/tasks/priority`;
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "x-api-key": `${ApiKey}`,
-      "Content-Type": "application/json",
-    },
-  });
+export async function GetTasksPriority(
+  status: string | null,
+  page: number = 1,
+  itemsPerPage: number = 10
+) {
+  const url = new URL(`${ApiURL}/tasks/priority`);
 
-  const data = await response.json();
-  console.log(data);
-  return data;
+  url.searchParams.append("page", page.toString());
+  url.searchParams.append("itemsPerPage", itemsPerPage.toString());
+
+  if (status && status !== "All") {
+    url.searchParams.append("status", status);
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "x-api-key": `${ApiKey}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching priority tasks:", error);
+    throw error;
+  }
 }
 
 export async function GetTasksById(userId: string) {
@@ -71,7 +89,6 @@ export async function GetHoursWorkedTeam() {
   });
 
   const data: TimeLineResponse[] = await response.json();
-  console.log(data);
   return data;
 }
 
@@ -108,6 +125,18 @@ export interface TasksTemplateResponse {
   hours: number;
 }
 export interface TasksResponse {
+  data: TaskParams[];
+  pagination: Pagination;
+}
+export interface Pagination {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  firstItemIndex: number;
+  lastItemIndex: number;
+}
+
+export interface TaskParams {
   id: string;
   title: string;
   bucketId: string;

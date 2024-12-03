@@ -53,7 +53,6 @@ export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
   const [open, setOpen] = React.useState(false);
 
   const onSubmit = async (data: any) => {
-    console.log(data);
     const assignments = data.tasks.reduce(
       (acc: Record<string, string>, task: any) => {
         if (task.responsibleId) {

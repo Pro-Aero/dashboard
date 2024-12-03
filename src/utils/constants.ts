@@ -14,7 +14,9 @@ export const ClientId: string =
     : "";
 
 export const ApiKey: string =
-  process.env.NEXT_API !== undefined ? process.env.NEXT_API : "";
+  process.env.NEXT_PUBLIC_NEXTAUTH_API !== undefined
+    ? process.env.NEXT_PUBLIC_NEXTAUTH_API
+    : "";
 
 export const ApiKeyServer: string =
   process.env.NEXTAUTH_API_SERVER !== undefined

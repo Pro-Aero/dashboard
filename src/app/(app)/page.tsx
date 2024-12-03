@@ -7,30 +7,48 @@ import { GetTasksPriority } from "@/services/tasks";
 import { Separator } from "@/components/ui/separator";
 import { GetAllPlanners } from "@/services/planners";
 import { Chart } from "@/components/Charts";
+import { StatusSelect } from "@/components/StatusSelect";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: {
+    status: string;
+    page: string;
+    itemsPerPage: string;
+  };
+}) {
   const session = await auth();
 
   if (!session || Date.now() >= new Date(session.expires).getTime()) {
     redirect("/auth/sign-in");
   }
 
-  const tasksPriority = await GetTasksPriority();
+  const page = parseInt(searchParams.page ?? "1", 10);
+  const itemsPerPage = parseInt(searchParams.itemsPerPage ?? "10", 10);
+
+  const status = (searchParams.status as string) || "All";
+  const tasksPriority = await GetTasksPriority(status, page, itemsPerPage);
   const hoursProjects = await GetAllPlanners();
 
   return (
     <div className="flex-col flex-1 items-start gap-4 p-4 sm:py-0 ">
       <Card className="rounded-3xl mt-10 mb-10">
         <CardHeader>
-          <CardTitle className="flex">
+          <CardTitle className="flex items-center">
             <span>Tarefas prioritárias</span>
-            <div className="ml-auto px-2">
-              <ArrowRight className="size-6" />
+            <div className="ml-auto flex items-center gap-4">
+              <StatusSelect />
             </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <TableTasks tasks={tasksPriority} />
+          <TableTasks
+            tasks={tasksPriority}
+            currentPage={page}
+            totalPages={Math.ceil(tasksPriority.pagination.totalPages)}
+            itemsPerPage={itemsPerPage}
+          />
         </CardContent>
       </Card>
 

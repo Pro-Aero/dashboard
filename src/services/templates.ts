@@ -52,9 +52,6 @@ export async function ExecuteTemplate(data: InputsExecute) {
   const { templateId, assignments, plan } =
     FormDataTemplateSchemaExecute.parse(data);
 
-  console.log(assignments);
-  console.log(templateId, plan);
-
   const response = await fetch(
     `${ApiURL}/templates/${templateId}/planners/${plan}/execute`,
     {
@@ -68,8 +65,6 @@ export async function ExecuteTemplate(data: InputsExecute) {
       }),
     }
   );
-
-  console.log(response.bodyUsed);
 
   if (response.ok) {
     return true;
