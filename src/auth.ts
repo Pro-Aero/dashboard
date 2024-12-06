@@ -13,12 +13,9 @@ export const {
   signIn: any;
   signOut: ReturnType<typeof NextAuth>["signOut"];
 } = NextAuth({
-  // Session config
-  // session: { strategy: "jwt" },
   pages: {
     signIn: "/auth/sign-in",
     error: "/auth/error",
   },
-  // Auth Config
   ...authConfig,
 });

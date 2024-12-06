@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 
 interface Props {
-  tasks: TasksResponse[];
+  tasks: TasksResponse;
 }
 
 export function TableTasksById({ tasks }: Props) {
@@ -40,9 +40,9 @@ export function TableTasksById({ tasks }: Props) {
           </TableHead>
         </TableRow>
       </TableHeader>
-      {tasks.length > 0 ? (
+      {tasks.data.length > 0 ? (
         <TableBody>
-          {tasks.map((item, index) => (
+          {tasks.data.map((item, index) => (
             <TableRow key={index}>
               <TableCell className="font-base text-black dark:text-white text-left p-2">
                 {item.title.split("{")[0].trim()}
