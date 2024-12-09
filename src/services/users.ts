@@ -1,7 +1,7 @@
 import { ApiKey, ApiURL } from "@/utils/constants";
 
 export async function GetAllUsers() {
-  const url = `${ApiURL}/users`;
+  const url = `${ApiURL}/users?show=true`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
