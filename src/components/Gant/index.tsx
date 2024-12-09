@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { scaleTime } from "d3-scale";
 import {
   Card,
   CardContent,
@@ -200,6 +201,10 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
     return monthsArray;
   }, [startDate, endDate]);
 
+  const xScale = useMemo(() => {
+    return scaleTime().domain(xDomain).range([0, 2000]);
+  }, [xDomain]);
+
   return (
     <Card className="w-full mt-6">
       <CardHeader>
@@ -284,7 +289,7 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
                     name="Tasks"
                     data={filteredChartData}
                     fill="hsl(var(--primary))"
-                    shape={<CustomShape />}
+                    shape={<CustomShape xScale={xScale} />}
                   />
                 </ScatterChart>
               </ResponsiveContainer>
@@ -297,24 +302,37 @@ export function TeamGanttChart({ teamData, usersList }: Props) {
   );
 }
 
+const stringToColor = (str: string) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  let colour = "#";
+  for (let i = 0; i < 3; i++) {
+    let value = (hash >> (i * 8)) & 0xff;
+    colour += ("00" + value.toString(16)).substr(-2);
+  }
+  return colour;
+};
+
 const CustomShape = (props: any) => {
-  const { cx, cy, payload } = props;
-  const data = payload[0].payload;
-  const array = data.taskPerDay.tasks.filter();
+  const { cx, cy, payload, xScale } = props;
 
   const barHeight = 22;
-  const maxBarWidth = 200; // Largura máxima para a task mais longa
-  const minBarWidth = 40; // Largura mínima para a task mais curta
-  const maxHours = 40; // Assumindo que uma semana de trabalho tem 40 horas
 
-  const barWidth = Math.max(minBarWidth, Math.min(maxBarWidth * maxBarWidth));
+  const startDate = new Date(payload.taskInfo.startDateTime).getTime();
+  const endDate = new Date(payload.taskInfo.dueDateTime).getTime();
+
+  const startX = xScale(startDate);
+  const endX = xScale(endDate);
+  const barWidth = Math.max(endX - startX, 40);
 
   const color = stringToColor(payload.taskInfo.title);
 
   return (
     <g>
       <rect
-        x={cx}
+        x={startX}
         y={cy - barHeight / 2}
         width={barWidth}
         height={barHeight}
@@ -323,7 +341,7 @@ const CustomShape = (props: any) => {
         ry={4}
       />
       <text
-        x={cx + 5}
+        x={startX + 5}
         y={cy + 5}
         fill="white"
         fontSize="12"
@@ -335,6 +353,8 @@ const CustomShape = (props: any) => {
     </g>
   );
 };
+
+export default CustomShape;
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -356,7 +376,7 @@ const CustomTooltip = ({ active, payload }: any) => {
           }) => (
             <div key={task.taskId} className="mb-2">
               <p className="text-muted-foreground">
-                Horas neste dia: {task.hours ? task.hours : 0}
+                Horas estimadas: {task.hours ? task.hours : 0}
               </p>
               <p className="text-muted-foreground">
                 Status:{" "}
@@ -371,16 +391,3 @@ const CustomTooltip = ({ active, payload }: any) => {
   }
   return null;
 };
-
-function stringToColor(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  let color = "#";
-  for (let i = 0; i < 3; i++) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += ("00" + value.toString(16)).substr(-2);
-  }
-  return color;
-}
