@@ -30,9 +30,12 @@ export default async function Tasks({ searchParams }: Props) {
       : session.user.id;
 
   const UserWeeks = await GetUserWeekAvailable(userId as string);
-  const taskById = await GetTasksById(userId as string);
+  const taskById = await GetTasksById(userId as string, { notComplete: true });
+  console.log(taskById);
 
-  const statusTasksData = await GetStatusTasksById(userId as string);
+  const statusTasksData = await GetStatusTasksById(userId as string, {
+    notComplete: true,
+  });
   const tasksSummary = statusTasksData.tasksSummary;
 
   const listUsers = await GetAllUsers();

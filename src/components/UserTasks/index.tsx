@@ -68,8 +68,8 @@ export function TableTasksById({ tasks }: Props) {
                   : item.priority === 3
                   ? "Importante"
                   : item.priority === 5
-                  ? "Media"
-                  : "Baixa "}
+                  ? "Alta"
+                  : "Baixa"}
               </TableCell>
 
               <TableCell className="font-base text-black dark:text-white text-center p-2">
@@ -77,16 +77,28 @@ export function TableTasksById({ tasks }: Props) {
                   className={`${
                     item.status === "Overdue"
                       ? "bg-red-800 hover:bg-red-800"
-                      : item.status === null || item.status === ""
+                      : item.status === "NextOverdue"
+                      ? "bg-orange-600 hover:bg-orange-600"
+                      : item.status === null ||
+                        item.status === "" ||
+                        item.status === "NotStarted"
                       ? "bg-zinc-800 hover:bg-zinc-800"
-                      : "bg-review hover:bg-review"
+                      : item.status === "InProgress"
+                      ? "bg-blue-800 hover:bg-blue-800"
+                      : "bg-green-800 hover:bg-green-800"
                   } text-white text-xs font-semibold`}
                 >
                   {item.status === "Overdue"
                     ? "Atrasado"
-                    : item.status === null || item.status === ""
+                    : item.status === "NextOverdue"
+                    ? "Próximo do vencimento"
+                    : item.status === null ||
+                      item.status === "" ||
+                      item.status === "NotStarted"
                     ? "Não iniciado"
-                    : "Em progresso"}
+                    : item.status === "InProgress"
+                    ? "Em progresso"
+                    : "Concluído"}
                 </Badge>
               </TableCell>
             </TableRow>

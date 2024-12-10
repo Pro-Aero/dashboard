@@ -1,7 +1,19 @@
 import { ApiKey, ApiURL } from "@/utils/constants";
 
-export async function GetStatusTasksById(userId: string) {
-  const url = `${ApiURL}/users/${userId}/tasks/status`;
+interface StatusTaskByIdParams {
+  notComplete?: boolean;
+}
+
+export async function GetStatusTasksById(
+  userId: string,
+  params: StatusTaskByIdParams
+) {
+  let url = `${ApiURL}/users/${userId}/tasks/status`;
+
+  if (params?.notComplete) {
+    url += `?notComplete=${params.notComplete}`;
+  }
+
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -63,8 +75,17 @@ export async function GetTasksPriority(
   }
 }
 
-export async function GetTasksById(userId: string) {
-  const url = `${ApiURL}/users/${userId}/tasks?page=1&itemsPerPage=1000`;
+interface TaskByIdParams {
+  notComplete?: boolean;
+}
+
+export async function GetTasksById(userId: string, params?: TaskByIdParams) {
+  let url = `${ApiURL}/users/${userId}/tasks?page=1&itemsPerPage=1000`;
+
+  if (params?.notComplete) {
+    url += `&notComplete=${params.notComplete}`;
+  }
+
   const response = await fetch(url, {
     method: "GET",
     headers: {
