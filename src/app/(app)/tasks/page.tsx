@@ -31,7 +31,6 @@ export default async function Tasks({ searchParams }: Props) {
 
   const UserWeeks = await GetUserWeekAvailable(userId as string);
   const taskById = await GetTasksById(userId as string, { notComplete: true });
-  console.log(taskById);
 
   const statusTasksData = await GetStatusTasksById(userId as string, {
     notComplete: true,
