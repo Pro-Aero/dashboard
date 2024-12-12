@@ -30,19 +30,13 @@ export default function Timeline({ teamData }: Props) {
   const [startDate, setStartDate] = useState(new Date());
 
   useEffect(() => {
-    const currentDate = new Date();
-    const firstDayOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
-    );
-
-    const adjustedDate = new Date(firstDayOfMonth);
-    adjustedDate.setDate(
-      adjustedDate.getDate() - ((adjustedDate.getDay() + 6) % 7)
-    );
-
-    setStartDate(adjustedDate);
+    const today = new Date();
+    // Get the current day of the week (0-6, where 0 is Sunday)
+    const currentDay = today.getDay();
+    // Calculate the date of Monday of the current week
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
+    setStartDate(monday);
   }, []);
 
   const generateDates = () => {

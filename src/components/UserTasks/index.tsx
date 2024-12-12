@@ -24,14 +24,15 @@ export function TableTasksById({ tasks }: Props) {
             Nome
           </TableHead>
           <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
+            Plano
+          </TableHead>
+          <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
             Horas
           </TableHead>
           <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
             Responsável
           </TableHead>
-          <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
-            Plano
-          </TableHead>
+
           <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
             Prioridade
           </TableHead>
@@ -49,6 +50,10 @@ export function TableTasksById({ tasks }: Props) {
               </TableCell>
 
               <TableCell className="font-base text-black dark:text-white text-left p-2">
+                {item.planner.title}
+              </TableCell>
+
+              <TableCell className="font-base text-black dark:text-white text-left p-2">
                 {item.hours ? item.hours : "-"}
               </TableCell>
 
@@ -56,10 +61,6 @@ export function TableTasksById({ tasks }: Props) {
                 {Array.isArray(item.assignments) && item.assignments.length > 0
                   ? item.assignments.map((resp) => resp.name).join(", ")
                   : "-"}
-              </TableCell>
-
-              <TableCell className="font-base text-black dark:text-white text-left p-2">
-                {item.planner.title}
               </TableCell>
 
               <TableCell className="font-base text-black dark:text-white text-left p-2">

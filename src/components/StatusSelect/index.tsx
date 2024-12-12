@@ -19,7 +19,8 @@ export function StatusSelect() {
   const handleStatusChange = (value: Status) => {
     const params = new URLSearchParams(searchParams);
     params.set("status", value);
-    router.push(`?${params.toString()}`);
+    params.set("page", "1"); // Reset page to 1 when status changes
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
   return (

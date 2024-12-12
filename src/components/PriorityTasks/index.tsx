@@ -33,7 +33,7 @@ export function TableTasks({
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", newPage.toString());
-    router.push(`?${params.toString()}`);
+    router.push(`?${params.toString()}`, { scroll: false });
   };
 
   return (
@@ -45,13 +45,13 @@ export function TableTasks({
               Nome
             </TableHead>
             <TableHead className="font-semibold text-base text-black dark:text-white w-[10%]">
+              Plano
+            </TableHead>
+            <TableHead className="font-semibold text-base text-black dark:text-white w-[10%]">
               Horas
             </TableHead>
             <TableHead className="font-semibold text-base text-black dark:text-white w-[15%]">
               Responsável
-            </TableHead>
-            <TableHead className="font-semibold text-base text-black dark:text-white w-[10%]">
-              Plano
             </TableHead>
             <TableHead className="font-semibold text-base text-black dark:text-white w-[10%]">
               Prioridade
@@ -77,6 +77,9 @@ export function TableTasks({
                     </div>
                   </TableCell>
                   <TableCell className="font-base text-black dark:text-white">
+                    {item.planner?.title || "-"}
+                  </TableCell>
+                  <TableCell className="font-base text-black dark:text-white">
                     {item.hours ? item.hours : "-"}
                   </TableCell>
                   <TableCell className="font-base text-black dark:text-white">
@@ -85,9 +88,7 @@ export function TableTasks({
                       ? item.assignments.map((resp) => resp.name).join(", ")
                       : "-"}
                   </TableCell>
-                  <TableCell className="font-base text-black dark:text-white">
-                    {item.planner?.title || "-"}
-                  </TableCell>
+
                   <TableCell className="font-base text-black dark:text-white">
                     {item.priority === 1
                       ? "Urgente"
