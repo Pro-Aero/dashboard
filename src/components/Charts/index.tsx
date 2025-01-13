@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import {
   Bar,
   BarChart,
@@ -27,9 +28,18 @@ interface Props {
 }
 
 export function Chart({ hoursProjects }: Props) {
-  const sortedData = [...hoursProjects]
+  const filteredData = hoursProjects.filter(
+    (project) => project.title !== "Academy"
+  );
+
+  const sortedData = [...filteredData]
     .sort((a, b) => b.totalHours - a.totalHours)
     .slice(0, 10);
+
+  const visibleData = sortedData.map((item) => ({
+    ...item,
+    totalHours: item.totalHours ?? undefined,
+  }));
 
   return (
     <ChartContainer
@@ -38,7 +48,7 @@ export function Chart({ hoursProjects }: Props) {
     >
       <BarChart
         accessibilityLayer
-        data={sortedData}
+        data={visibleData}
         margin={{
           top: 40,
           right: 20,
@@ -104,14 +114,15 @@ const CustomXAxisTick = ({ x, y, payload }: any) => {
   );
 };
 
-// Custom tooltip component
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
       <div className="bg-background border border-border p-2 rounded shadow">
         <p className="font-semibold">{data.title}</p>
-        <p>Total de horas: {data.totalHours}</p>
+        {data.totalHours !== undefined && (
+          <p>Total de horas: {data.totalHours}</p>
+        )}
       </div>
     );
   }
