@@ -8,6 +8,7 @@ import { TableTasksById } from "../../../components/UserTasks";
 import { GetStatusTasksById } from "@/services/tasks";
 import { GetAllUsers } from "@/services/users";
 import { SelectUser } from "../../../components/UserDropdown";
+import ChartStatusTask from "@/components/StatusChart";
 
 interface Props {
   searchParams: {
@@ -36,6 +37,7 @@ export default async function Tasks({ searchParams }: Props) {
     notComplete: true,
   });
   const tasksSummary = statusTasksData.tasksSummary;
+  const statusSummary = statusTasksData.statusSummary;
 
   const listUsers = await GetAllUsers();
 
@@ -51,6 +53,8 @@ export default async function Tasks({ searchParams }: Props) {
 
       <div className="grid grid-cols-2 flex-1 mt-10 items-start gap-4 p-4 sm:py-0 ">
         <ChartPriorityTask tasksSummary={tasksSummary} />
+
+        <ChartStatusTask statusSummary={statusSummary} />
 
         <ChartAvailabilityTask weeklyAvailability={UserWeeks} />
 
