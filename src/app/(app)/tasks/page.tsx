@@ -51,14 +51,14 @@ export default async function Tasks({ searchParams }: Props) {
         <></>
       )}
 
-      <div className="grid grid-cols-2 flex-1 mt-10 items-start gap-4 p-4 sm:py-0 ">
+      <div className="grid grid-cols-3 flex-1 mt-10 items-start gap-4 p-4 sm:py-0 ">
         <ChartPriorityTask tasksSummary={tasksSummary} />
 
         <ChartStatusTask statusSummary={statusSummary} />
 
         <ChartAvailabilityTask weeklyAvailability={UserWeeks} />
 
-        <Card className="col-span-2">
+        <Card className="col-span-3">
           <CardHeader>
             <CardTitle>
               <span>Lista de tarefas</span>
