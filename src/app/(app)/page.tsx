@@ -15,7 +15,6 @@ export default async function Home({
   searchParams: {
     status: string;
     page: string;
-    itemsPerPage: string;
   };
 }) {
   const session = await auth();
@@ -25,10 +24,9 @@ export default async function Home({
   }
 
   const page = parseInt(searchParams.page ?? "1", 10);
-  const itemsPerPage = parseInt(searchParams.itemsPerPage ?? "10", 10);
 
   const status = (searchParams.status as string) || "All";
-  const tasksPriority = await GetTasksPriority(status, page, itemsPerPage);
+  const tasksPriority = await GetTasksPriority(status, page, 7);
   const hoursProjects = await GetAllPlanners();
 
   return (
@@ -47,7 +45,6 @@ export default async function Home({
             tasks={tasksPriority}
             currentPage={page}
             totalPages={Math.ceil(tasksPriority.pagination.totalPages)}
-            itemsPerPage={itemsPerPage}
           />
         </CardContent>
       </Card>

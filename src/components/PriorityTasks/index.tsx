@@ -13,20 +13,15 @@ import {
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { formatDate } from "@/lib/date";
 
 interface Props {
   tasks: TasksResponse;
   currentPage: number;
   totalPages: number;
-  itemsPerPage: number;
 }
 
-export function TableTasks({
-  tasks,
-  currentPage,
-  totalPages,
-  itemsPerPage,
-}: Props) {
+export function TableTasks({ tasks, currentPage, totalPages }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -52,6 +47,9 @@ export function TableTasks({
             </TableHead>
             <TableHead className="font-semibold text-base text-black dark:text-white w-[15%]">
               Responsável
+            </TableHead>
+            <TableHead className="font-semibold text-base text-black dark:text-white w-[15%]">
+              Prazo
             </TableHead>
             <TableHead className="font-semibold text-base text-black dark:text-white w-[10%]">
               Prioridade
@@ -90,6 +88,10 @@ export function TableTasks({
                   </TableCell>
 
                   <TableCell className="font-base text-black dark:text-white">
+                    {item.dueDateTime ? formatDate(item.dueDateTime) : "-"}
+                  </TableCell>
+
+                  <TableCell className="font-base text-black dark:text-white">
                     {item.priority === 1
                       ? "Urgente"
                       : item.priority === 3
@@ -105,7 +107,9 @@ export function TableTasks({
                           ? "bg-red-800 hover:bg-red-800"
                           : item.status === "NextOverdue"
                           ? "bg-orange-600 hover:bg-orange-600"
-                          : item.status === null || item.status === ""
+                          : item.status === null ||
+                            item.status === "" ||
+                            item.status == "NotStarted"
                           ? "bg-zinc-800 hover:bg-zinc-800"
                           : item.status === "InProgress"
                           ? "bg-blue-800 hover:bg-blue-800"
@@ -116,7 +120,9 @@ export function TableTasks({
                         ? "Atrasado"
                         : item.status === "NextOverdue"
                         ? "Próximo do vencimento"
-                        : item.status === null || item.status === ""
+                        : item.status === null ||
+                          item.status === "" ||
+                          item.status === "NotStarted"
                         ? "Não iniciado"
                         : item.status === "InProgress"
                         ? "Em progresso"

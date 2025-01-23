@@ -43,7 +43,7 @@ export async function GetUserWeekAvailable(userId: string) {
 export async function GetTasksPriority(
   status: string | null,
   page: number = 1,
-  itemsPerPage: number = 10
+  itemsPerPage: number = 7
 ) {
   const url = new URL(`${ApiURL}/tasks/priority`);
 
