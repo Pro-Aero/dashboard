@@ -33,6 +33,7 @@ export function StatusSelect() {
         <SelectItem value="Overdue">Atrasadas</SelectItem>
         <SelectItem value="NextOverdue">Próximo de vencer</SelectItem>
         <SelectItem value="InProgress">Em progresso</SelectItem>
+        <SelectItem value="NotStarted">Não iniciado</SelectItem>
       </SelectContent>
     </Select>
   );

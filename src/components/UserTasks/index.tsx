@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatDate } from "@/lib/date";
 
 interface Props {
   tasks: TasksResponse;
@@ -32,7 +33,9 @@ export function TableTasksById({ tasks }: Props) {
           <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
             Responsável
           </TableHead>
-
+          <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
+            Prazo
+          </TableHead>
           <TableHead className="font-semibold text-base text-black dark:text-white text-left p-2">
             Prioridade
           </TableHead>
@@ -64,6 +67,10 @@ export function TableTasksById({ tasks }: Props) {
               </TableCell>
 
               <TableCell className="font-base text-black dark:text-white text-left p-2">
+                {item.dueDateTime ? formatDate(item.dueDateTime) : "-"}
+              </TableCell>
+
+              <TableCell className="font-base text-black dark:text-white">
                 {item.priority === 1
                   ? "Urgente"
                   : item.priority === 3
@@ -72,8 +79,7 @@ export function TableTasksById({ tasks }: Props) {
                   ? "Alta"
                   : "Baixa"}
               </TableCell>
-
-              <TableCell className="font-base text-black dark:text-white text-center p-2">
+              <TableCell className="font-base text-black text-center dark:text-white">
                 <Badge
                   className={`${
                     item.status === "Overdue"
@@ -82,7 +88,7 @@ export function TableTasksById({ tasks }: Props) {
                       ? "bg-orange-600 hover:bg-orange-600"
                       : item.status === null ||
                         item.status === "" ||
-                        item.status === "NotStarted"
+                        item.status == "NotStarted"
                       ? "bg-zinc-800 hover:bg-zinc-800"
                       : item.status === "InProgress"
                       ? "bg-blue-800 hover:bg-blue-800"

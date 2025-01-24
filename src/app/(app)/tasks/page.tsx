@@ -9,10 +9,12 @@ import { GetStatusTasksById } from "@/services/tasks";
 import { GetAllUsers } from "@/services/users";
 import { SelectUser } from "../../../components/UserDropdown";
 import ChartStatusTask from "@/components/StatusChart";
+import { StatusSelect } from "@/components/StatusSelect";
 
 interface Props {
   searchParams: {
     employee: string;
+    status?: string;
   };
 }
 
@@ -30,8 +32,13 @@ export default async function Tasks({ searchParams }: Props) {
         : session.user.id
       : session.user.id;
 
+  const status = searchParams.status;
+
   const UserWeeks = await GetUserWeekAvailable(userId as string);
-  const taskById = await GetTasksById(userId as string, { notComplete: true });
+  const taskById = await GetTasksById(userId as string, {
+    notComplete: true,
+    status,
+  });
 
   const statusTasksData = await GetStatusTasksById(userId as string, {
     notComplete: true,
@@ -60,8 +67,11 @@ export default async function Tasks({ searchParams }: Props) {
 
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>
+            <CardTitle className="flex">
               <span>Lista de tarefas</span>
+              <div className="ml-auto flex items-center gap-4">
+                <StatusSelect />
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>

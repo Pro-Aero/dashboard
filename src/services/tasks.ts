@@ -77,6 +77,7 @@ export async function GetTasksPriority(
 
 interface TaskByIdParams {
   notComplete?: boolean;
+  status?: string;
 }
 
 export async function GetTasksById(userId: string, params?: TaskByIdParams) {
@@ -84,6 +85,10 @@ export async function GetTasksById(userId: string, params?: TaskByIdParams) {
 
   if (params?.notComplete) {
     url += `&notComplete=${params.notComplete}`;
+  }
+
+  if (params?.status && params.status !== "All") {
+    url += `&status=${params.status}`;
   }
 
   const response = await fetch(url, {
