@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { toast } from "sonner";
-import { TemplateResponse } from "@/services/templates";
+import type { TemplateResponse } from "@/services/templates";
 import {
   Table,
   TableBody,
@@ -28,9 +28,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { UserResponse } from "@/services/users";
-import { PlannerResponse } from "@/services/planners";
+import type { UserResponse } from "@/services/users";
+import type { PlannerResponse } from "@/services/planners";
 import { ActionExecuteTemplate } from "./actions";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Props {
   templateData: TemplateResponse;
@@ -125,68 +126,70 @@ export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
 
           <div>
             <h3 className="text-lg font-medium mb-2">Tarefas do template</h3>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="font-semibold text-sm text-gray-600">
-                    Descrição
-                  </TableHead>
-                  <TableHead className="font-semibold text-sm text-gray-600">
-                    Horas
-                  </TableHead>
-                  <TableHead className="font-semibold text-sm text-gray-600">
-                    Prioridade
-                  </TableHead>
-                  <TableHead className="font-semibold text-sm text-gray-600">
-                    Responsável
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {templateData.tasks.map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="text-sm text-gray-700">
-                      {item.title}
-                    </TableCell>
-                    <TableCell className="text-sm text-gray-700">
-                      {item.hours}
-                    </TableCell>
-                    <TableCell className="text-sm text-gray-700">
-                      {item.priority === 1
-                        ? "Urgente"
-                        : item.priority === 3
-                        ? "Importante"
-                        : item.priority === 5
-                        ? "Media"
-                        : "Baixa"}
-                    </TableCell>
-                    <TableCell>
-                      <Controller
-                        name={`tasks.${index}.responsibleId`}
-                        control={control}
-                        render={({ field }) => (
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Selecionar responsável" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {users.map((user) => (
-                                <SelectItem key={user.id} value={user.id}>
-                                  {user.displayName}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
-                    </TableCell>
+            <ScrollArea className="h-[400px]">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="font-semibold text-sm text-gray-600">
+                      Descrição
+                    </TableHead>
+                    <TableHead className="font-semibold text-sm text-gray-600">
+                      Horas
+                    </TableHead>
+                    <TableHead className="font-semibold text-sm text-gray-600">
+                      Prioridade
+                    </TableHead>
+                    <TableHead className="font-semibold text-sm text-gray-600">
+                      Responsável
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {templateData.tasks.map((item, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="text-sm text-gray-700">
+                        {item.title}
+                      </TableCell>
+                      <TableCell className="text-sm text-gray-700">
+                        {item.hours}
+                      </TableCell>
+                      <TableCell className="text-sm text-gray-700">
+                        {item.priority === 1
+                          ? "Urgente"
+                          : item.priority === 3
+                          ? "Importante"
+                          : item.priority === 5
+                          ? "Media"
+                          : "Baixa"}
+                      </TableCell>
+                      <TableCell>
+                        <Controller
+                          name={`tasks.${index}.responsibleId`}
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Selecionar responsável" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {users.map((user) => (
+                                  <SelectItem key={user.id} value={user.id}>
+                                    {user.displayName}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollArea>
           </div>
 
           <div className="flex">
