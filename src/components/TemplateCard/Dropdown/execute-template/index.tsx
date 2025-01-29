@@ -131,9 +131,15 @@ export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
             )}
           </div>
 
+          {errors && (
+            <p className="text-red-500 text-sm">
+              Selecione todos os responsáveis para executar o template
+            </p>
+          )}
+
           <div>
             <h3 className="text-lg font-medium mb-2">Tarefas do template</h3>
-            <ScrollArea className="h-[400px]">
+            <ScrollArea className="h-[350px]">
               <Table>
                 <TableHeader>
                   <TableRow>
