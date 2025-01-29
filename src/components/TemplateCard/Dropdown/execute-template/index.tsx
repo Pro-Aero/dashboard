@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { toast } from "sonner";
 import type { TemplateResponse } from "@/services/templates";
 import {
@@ -32,6 +31,8 @@ import type { UserResponse } from "@/services/users";
 import type { PlannerResponse } from "@/services/planners";
 import { ActionExecuteTemplate } from "./actions";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TemplateSchemaData } from "./schema";
 
 interface Props {
   templateData: TemplateResponse;
@@ -40,7 +41,7 @@ interface Props {
 }
 
 export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       plan: "",
       templateId: templateData.id,
@@ -49,7 +50,10 @@ export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
         responsibleId: "",
       })),
     },
+    resolver: zodResolver(TemplateSchemaData),
   });
+
+  const { errors } = formState;
 
   const [open, setOpen] = React.useState(false);
 
@@ -122,6 +126,9 @@ export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
                 </Select>
               )}
             />
+            {errors.plan && (
+              <p className="text-red-500 text-sm">{errors.plan.message}</p>
+            )}
           </div>
 
           <div>
@@ -184,6 +191,11 @@ export function ModalExecuteTemplate({ templateData, users, planners }: Props) {
                             </Select>
                           )}
                         />
+                        {errors.tasks?.[index]?.responsibleId && (
+                          <p className="text-red-500 text-sm">
+                            {errors.tasks[index].responsibleId.message}
+                          </p>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
