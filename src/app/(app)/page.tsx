@@ -26,7 +26,7 @@ export default async function Home({
   const page = parseInt(searchParams.page ?? "1", 10);
 
   const status = (searchParams.status as string) || "All";
-  const tasksPriority = await GetTasksPriority(status, page, 7);
+  const tasksPriority = await GetTasksPriority(status, page, 15);
   const hoursProjects = await GetAllPlanners();
 
   return (
