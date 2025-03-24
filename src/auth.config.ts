@@ -5,9 +5,8 @@ import { ApiKeyServer, ApiURL } from "./utils/constants";
 const adminEmails = [
   "maria.gabriela@proaero.aero",
   "marcelo.araujo@proaero.aero",
-  "vladimir.brandi@proaero.aero",
   "joao.priante@proaero.aero",
-  "pedro@flyaxis.aero",
+  "vinicius.tanaka@proaero.aero",
   "rodrigo@flyaxis.aero",
 ];
 
